@@ -21,7 +21,7 @@ const NavItems = () => (
 );
 
 const Navbar = () => {
-  const [isVolume, setIsVolume] = useState(false);
+  const [isVolume, setIsVolume] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
