@@ -11,7 +11,8 @@ function MyRoom(props: any) {
         receiveShadow
         geometry={nodes['G-Object034'].geometry}
         material={materials['*5']}
-        position={[0, 1.687, 0]}
+        position={[2, 1.687, 0]}
+        rotation={[0, Math.PI / 2, 0]}
       />
       <mesh
         castShadow
@@ -20,22 +21,32 @@ function MyRoom(props: any) {
         material={materials['*2']}
         position={[0, 0.747, 0]}
       />
+       <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes['G-Object035'].geometry}
+        material={materials['*2']}
+        position={[2, 0.747, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+      />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes['G-Object036'].geometry}
         material={materials['*5']}
-        position={[0, 1.347, 0]}
+        position={[2, 1.347, 0]}
+        rotation={[0, Math.PI / 2, 0]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes['G-Object037'].geometry}
         material={materials['*5']}
-        position={[1, 0.621, 0]}
+        position={[2, 0.621, 0]}
         scale={[0.636, 1.242, 1]}
+        rotation={[0, Math.PI / 2, 0]}
       />
-      <group position={[1.019, 0.497, -0.539]}>
+      <group position={[1.4, 0.497, -0.039]} rotation={[0, Math.PI / 2, 0]}>
         <group rotation={[Math.PI, -1.567, Math.PI]} scale={0.81}>
           <mesh
             castShadow
@@ -77,7 +88,7 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[1.294, 0.539, -0.42]} rotation={[Math.PI, 0, -Math.PI / 2]} scale={0.113}>
+      <group position={[1.53, 0.539, -0.35]} rotation={[Math.PI, -Math.PI / 2, -Math.PI / 2]} scale={0.113}>
         <mesh
           castShadow
           receiveShadow
@@ -91,8 +102,9 @@ function MyRoom(props: any) {
           material={materials.Color_001}
         />
       </group>
-      <group position={[0.864, 0.748, -0.516]}>
-        <group position={[-0.196, -0.008, 0.108]}>
+      {/* Screen */}
+      <group position={[1.064, 0.748, -0.356]}>
+        <group position={[-0.1, -0.008, 0.08]} rotation={[0, 0, 0]} scale={1.3}>
           <group rotation={[0, Math.PI / 2, 0]} scale={0.012}>
             <mesh
               castShadow
@@ -180,7 +192,7 @@ function MyRoom(props: any) {
             material={materials.overview_hero4_20091020}
           />
         </group>
-        <group position={[-0.466, 0, -0.003]}>
+        <group position={[-0.576, 0, -0.12]}>
           <group position={[-0.001, 0, 0.002]}>
             <group position={[0.018, 0, -0.021]}>
               <group position={[-0.018, 0, 0.022]} rotation={[-Math.PI, 0, -Math.PI]} scale={0.074}>
@@ -243,7 +255,8 @@ function MyRoom(props: any) {
           </group>
         </group>
       </group>
-      <group position={[0.648, 0.001, -0.57]}>
+      {/* Chair */}
+      <group position={[0.848, 0.001, -0.7]}>
         <mesh
           castShadow
           receiveShadow
@@ -326,7 +339,8 @@ function MyRoom(props: any) {
           scale={0.023}
         />
       </group>
-      <group position={[0.896, 1.765, -0.206]}>
+      {/* Plant pot */}
+      <group position={[1.76, 1.728, -0.362]}  rotation={[0, Math.PI / 2, 0]} scale={1.5}>
         <group position={[0, 0, 0.002]} rotation={[0, 0, -Math.PI]} scale={-0.127}>
           <mesh
             castShadow
@@ -398,7 +412,8 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[1.035, 1.765, -0.206]}>
+      {/* Plant pot */}
+      <group position={[1.76, 1.728, -0.062]}  rotation={[0, Math.PI / 2, 0]} scale={1.5}>
         <group position={[0, 0, 0.002]} rotation={[0, 0, -Math.PI]} scale={-0.127}>
           <mesh
             castShadow
@@ -470,7 +485,8 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[0.915, 1.254, -0.016]}>
+      {/* Dior */}
+      <group position={[1.95, 1.254, -1.016]} rotation={[0, Math.PI / 2, 0]}>
         <group position={[0.532, 0.071, -0.283]}>
           <group
             position={[-0.415, 0.133, 0.021]}
@@ -521,7 +537,8 @@ function MyRoom(props: any) {
           </group>
         </group>
       </group>
-      <group position={[0.373, 1.387, 0.294]} rotation={[0, 1.571, 0]} scale={[0.148, 0.08, 0.08]}>
+      {/* Museums */}
+      <group position={[2.28, 1.387, -0.294]} rotation={[0, 1.571 + Math.PI / 2, 0]} scale={[0.148, 0.08, 0.08]}>
         <mesh
           castShadow
           receiveShadow
@@ -535,7 +552,7 @@ function MyRoom(props: any) {
           material={materials.Color_001}
         />
       </group>
-      <group position={[0.182, 1.477, -0.193]} rotation={[Math.PI, 0, -Math.PI / 2]} scale={0.085}>
+      <group position={[1.82, 1.477, -0.193]} rotation={[Math.PI, 0 - Math.PI / 2, -Math.PI / 2]} scale={0.085}>
         <mesh
           castShadow
           receiveShadow
@@ -549,7 +566,7 @@ function MyRoom(props: any) {
           material={materials.Color_001}
         />
       </group>
-      <group position={[1.349, 1.728, -0.347]}>
+      <group position={[1.6, 1.728, -1.147]} rotation={[0, Math.PI / 2, 0]}>
         <group position={[0.13, 0.001, 0.214]}>
           <mesh
             castShadow
@@ -571,7 +588,8 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[0.873, 1.388, -0.072]} rotation={[-2.88, 0, -Math.PI]} scale={0.56}>
+      {/* Home */}
+      <group position={[1.973, 1.388, -0.9]} rotation={[-3.12, -Math.PI / 2, -Math.PI]} scale={0.56}>
         <mesh
           castShadow
           receiveShadow
@@ -585,7 +603,7 @@ function MyRoom(props: any) {
           material={materials.Color_1}
         />
       </group>
-      <group position={[0.182, 1.477, -0.193]} rotation={[Math.PI, 0, -Math.PI / 2]} scale={0.085}>
+      <group position={[1.82, 1.477, -0.193]} rotation={[Math.PI, -Math.PI / 2, -Math.PI / 2]} scale={0.085}>
         <mesh
           castShadow
           receiveShadow
@@ -599,7 +617,7 @@ function MyRoom(props: any) {
           material={materials.Color_001}
         />
       </group>
-      <group position={[0.182, 1.477, -0.193]} rotation={[Math.PI, 0, -Math.PI / 2]} scale={0.085}>
+      <group position={[1.82, 1.477, -0.193]} rotation={[Math.PI, -Math.PI / 2, -Math.PI / 2]} scale={0.085}>
         <mesh
           castShadow
           receiveShadow
@@ -614,7 +632,7 @@ function MyRoom(props: any) {
         />
       </group>
       <group position={[-75.041, 1.608, -43.052]}>
-        <group position={[76.446, 0.15, 42.795]}>
+        <group position={[76.746, 0.15, 41.795]} rotation={[0, Math.PI / 2, 0]}>
           <mesh
             castShadow
             receiveShadow
@@ -635,7 +653,7 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[1.36, 1.458, -0.312]}>
+      <group position={[1.65, 1.458, -1.512]} rotation={[0, Math.PI / 2, 0]}>
         <group position={[0, 0, 0.054]}>
           <group rotation={[-Math.PI, 0, -Math.PI]} scale={1.36}>
             <mesh
@@ -668,7 +686,7 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[0.872, 1.728, -0.262]}>
+      <group position={[1.7, 1.728, -0.662]} rotation={[0, Math.PI / 2, 0]}>
         <group position={[0.3, 0, -0.001]} rotation={[-Math.PI, -1.571, 0]} scale={-1}>
           <mesh
             castShadow
@@ -708,7 +726,8 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <group position={[-30.017, -0.33, -16.328]}>
+      {/* Laptop */}
+      <group position={[-29.917, -0.34, -16.228]}>
         <group position={[31.303, 1.083, 15.735]} rotation={[3.089, -0.603, 3.109]} scale={0.034}>
           <mesh
             castShadow

@@ -1,11 +1,114 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGLTF } from "@react-three/drei";
+import { useGraph } from "@react-three/fiber";
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { SkeletonUtils } from "three-stdlib";
+import gsap from "gsap";
 
 export default function Character(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF("/models/character.glb") as any
+  const groupRef = useRef<THREE.Group>(null);
+
+  const { scene } = useGLTF("/models/character.glb");
+  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes, materials } = useGraph(clone) as {
+    nodes: Record<string, THREE.Mesh & { skeleton: THREE.Skeleton }>;
+    materials: Record<string, THREE.Material>;
+  };
+
+  useEffect(() => {
+    if (groupRef.current) {
+      console.log(nodes);
+
+      const tl = gsap.timeline();
+      tl.to(nodes.Head.rotation, { x: 0, duration: 1 })
+        .to(nodes.Hips.rotation, { x: -Math.PI / 2, duration: 1 })
+        .to(nodes.Spine.rotation, { x: Math.PI / 2, duration: 1 }, "<")
+        
+        // Leg
+        .to(nodes.LeftUpLeg.rotation, { x: Math.PI / 10, duration: 1 }, "<")
+        .to(nodes.RightUpLeg.rotation, { x: Math.PI / 10, duration: 1 }, "<")
+        .to(nodes.LeftLeg.rotation, { x: -Math.PI / 3, duration: 1 }, "<")
+        .to(nodes.RightLeg.rotation, { x: -Math.PI / 3, duration: 1 }, "<")
+        
+        // Arm
+        .to(nodes.LeftArm.rotation, { x: 0, y: 0.7, z: 1.2, duration: 1 }, "<")
+        .to(
+          nodes.LeftForeArm.rotation,
+          { x: -0.4, y: -0.8, z: 0.8, duration: 1 },
+          "<"
+        )
+        .to(nodes.LeftHand.rotation, { x: 0, y: 0.8, z: 0, duration: 1 }, "<")
+        .to(nodes.RightArm.rotation, { x: 0, y: -0.7, z: -0.9, duration: 1 }, "<")
+        .to(
+          nodes.RightForeArm.rotation,
+          { x: -0.45, y: 0.7, z: -0.4, duration: 1 },
+          "<"
+        )
+        .to(nodes.RightHand.rotation, { x: 0, y: -0.5, z: 0, duration: 1 }, "<")
+        
+        // Finger
+        .to(nodes.LeftHandThumb1.rotation, { x: -0.2, duration: 1 }, "<")
+        .to(nodes.LeftHandIndex1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
+        .to(nodes.LeftHandIndex2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.LeftHandIndex3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(
+          nodes.LeftHandMiddle1.rotation,
+          { x: Math.PI / 12, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.LeftHandMiddle2.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.LeftHandMiddle3.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        )
+        .to(nodes.LeftHandRing1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
+        .to(nodes.LeftHandRing2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.LeftHandRing3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(
+          nodes.LeftHandPinky1.rotation,
+          { x: Math.PI / 12, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.LeftHandPinky2.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.LeftHandPinky3.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        )
+        
+        .to(nodes.RightHandThumb1.rotation, { x: -0.2, duration: 1 }, "<")
+        .to(nodes.RightHandRing1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
+        .to(nodes.RightHandRing2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.RightHandRing3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(
+          nodes.RightHandPinky1.rotation,
+          { x: Math.PI / 12, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky2.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky3.rotation,
+          { x: Math.PI / 6, duration: 1 },
+          "<"
+        );
+    }
+  }, [nodes]);
 
   return (
-    <group {...props} dispose={null}>
+    <group ref={groupRef} {...props} dispose={null}>
       <primitive object={nodes.Hips} />
       <skinnedMesh
         name="EyeLeft"
