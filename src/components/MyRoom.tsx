@@ -104,7 +104,7 @@ function MyRoom(props: any) {
       </group>
       {/* Screen */}
       <group position={[1.064, 0.748, -0.356]}>
-        <group position={[-0.1, -0.008, 0.08]} rotation={[0, 0, 0]} scale={1.3}>
+        <group position={[-0.1, -0.008, 0.06]} rotation={[0, 0, 0]} scale={1.3}>
           <group rotation={[0, Math.PI / 2, 0]} scale={0.012}>
             <mesh
               castShadow

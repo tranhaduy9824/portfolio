@@ -17,93 +17,362 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
 
   useEffect(() => {
     if (groupRef.current) {
-      console.log(nodes);
-
       const tl = gsap.timeline();
-      tl.to(nodes.Head.rotation, { x: 0, duration: 1 })
-        .to(nodes.Hips.rotation, { x: -Math.PI / 2, duration: 1 })
-        .to(nodes.Spine.rotation, { x: Math.PI / 2, duration: 1 }, "<")
-        
+      tl.to(nodes.Head.rotation, { x: -0.5, duration: 0 })
+        .to(nodes.Hips.rotation, { x: -Math.PI / 2, duration: 0 })
+        .to(nodes.Spine.rotation, { x: Math.PI / 2, duration: 0 }, "<")
+
         // Leg
-        .to(nodes.LeftUpLeg.rotation, { x: Math.PI / 10, duration: 1 }, "<")
-        .to(nodes.RightUpLeg.rotation, { x: Math.PI / 10, duration: 1 }, "<")
-        .to(nodes.LeftLeg.rotation, { x: -Math.PI / 3, duration: 1 }, "<")
-        .to(nodes.RightLeg.rotation, { x: -Math.PI / 3, duration: 1 }, "<")
-        
+        .to(nodes.LeftUpLeg.rotation, { x: Math.PI / 10, duration: 0 }, "<")
+        .to(nodes.RightUpLeg.rotation, { x: Math.PI / 10, duration: 0 }, "<")
+        .to(nodes.LeftLeg.rotation, { x: -Math.PI / 3, duration: 0 }, "<")
+        .to(nodes.RightLeg.rotation, { x: -Math.PI / 3, duration: 0 }, "<")
+
         // Arm
-        .to(nodes.LeftArm.rotation, { x: 0, y: 0.7, z: 1.2, duration: 1 }, "<")
+        .to(nodes.LeftArm.rotation, { x: 0, y: 0.7, z: 1.2, duration: 0 }, "<")
         .to(
           nodes.LeftForeArm.rotation,
-          { x: -0.4, y: -0.8, z: 0.8, duration: 1 },
+          { x: -0.4, y: -0.8, z: 0.8, duration: 0 },
           "<"
         )
-        .to(nodes.LeftHand.rotation, { x: 0, y: 0.8, z: 0, duration: 1 }, "<")
-        .to(nodes.RightArm.rotation, { x: 0, y: -0.7, z: -0.9, duration: 1 }, "<")
+        .to(nodes.LeftHand.rotation, { x: 0, y: 0.8, z: 0, duration: 0 }, "<")
+        .to(
+          nodes.RightArm.rotation,
+          { x: 0, y: -0.7, z: -0.9, duration: 0 },
+          "<"
+        )
         .to(
           nodes.RightForeArm.rotation,
-          { x: -0.45, y: 0.7, z: -0.4, duration: 1 },
+          { x: -0.45, y: 0.7, z: -0.4, duration: 0 },
           "<"
         )
-        .to(nodes.RightHand.rotation, { x: 0, y: -0.5, z: 0, duration: 1 }, "<")
-        
+        .to(nodes.RightHand.rotation, { x: 0, y: -0.5, z: 0, duration: 0 }, "<")
+
         // Finger
-        .to(nodes.LeftHandThumb1.rotation, { x: -0.2, duration: 1 }, "<")
-        .to(nodes.LeftHandIndex1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
-        .to(nodes.LeftHandIndex2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
-        .to(nodes.LeftHandIndex3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.LeftHandThumb1.rotation, { x: -0.2, duration: 0 }, "<")
+        .to(
+          nodes.LeftHandIndex1.rotation,
+          { x: Math.PI / 12, duration: 0 },
+          "<"
+        )
+        .to(nodes.LeftHandIndex2.rotation, { x: Math.PI / 6, duration: 0 }, "<")
+        .to(nodes.LeftHandIndex3.rotation, { x: Math.PI / 6, duration: 0 }, "<")
         .to(
           nodes.LeftHandMiddle1.rotation,
-          { x: Math.PI / 12, duration: 1 },
+          { x: Math.PI / 12, duration: 0 },
           "<"
         )
         .to(
           nodes.LeftHandMiddle2.rotation,
-          { x: Math.PI / 6, duration: 1 },
+          { x: Math.PI / 6, duration: 0 },
           "<"
         )
         .to(
           nodes.LeftHandMiddle3.rotation,
-          { x: Math.PI / 6, duration: 1 },
+          { x: Math.PI / 6, duration: 0 },
           "<"
         )
-        .to(nodes.LeftHandRing1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
-        .to(nodes.LeftHandRing2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
-        .to(nodes.LeftHandRing3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.LeftHandRing1.rotation, { x: Math.PI / 12, duration: 0 }, "<")
+        .to(nodes.LeftHandRing2.rotation, { x: Math.PI / 6, duration: 0 }, "<")
+        .to(nodes.LeftHandRing3.rotation, { x: Math.PI / 6, duration: 0 }, "<")
         .to(
           nodes.LeftHandPinky1.rotation,
-          { x: Math.PI / 12, duration: 1 },
+          { x: Math.PI / 12, duration: 0 },
           "<"
         )
+        .to(nodes.LeftHandPinky2.rotation, { x: Math.PI / 6, duration: 0 }, "<")
+        .to(nodes.LeftHandPinky3.rotation, { x: Math.PI / 6, duration: 0 }, "<")
+
+        .to(nodes.RightHandThumb1.rotation, { x: -0.2, duration: 0 }, "<")
         .to(
-          nodes.LeftHandPinky2.rotation,
-          { x: Math.PI / 6, duration: 1 },
+          nodes.RightHandRing1.rotation,
+          { x: Math.PI / 12, duration: 0 },
           "<"
         )
-        .to(
-          nodes.LeftHandPinky3.rotation,
-          { x: Math.PI / 6, duration: 1 },
-          "<"
-        )
-        
-        .to(nodes.RightHandThumb1.rotation, { x: -0.2, duration: 1 }, "<")
-        .to(nodes.RightHandRing1.rotation, { x: Math.PI / 12, duration: 1 }, "<")
-        .to(nodes.RightHandRing2.rotation, { x: Math.PI / 6, duration: 1 }, "<")
-        .to(nodes.RightHandRing3.rotation, { x: Math.PI / 6, duration: 1 }, "<")
+        .to(nodes.RightHandRing2.rotation, { x: Math.PI / 6, duration: 0 }, "<")
+        .to(nodes.RightHandRing3.rotation, { x: Math.PI / 6, duration: 0 }, "<")
         .to(
           nodes.RightHandPinky1.rotation,
-          { x: Math.PI / 12, duration: 1 },
+          { x: Math.PI / 12, duration: 0 },
           "<"
         )
         .to(
           nodes.RightHandPinky2.rotation,
-          { x: Math.PI / 6, duration: 1 },
+          { x: Math.PI / 6, duration: 0 },
           "<"
         )
         .to(
           nodes.RightHandPinky3.rotation,
-          { x: Math.PI / 6, duration: 1 },
+          { x: Math.PI / 6, duration: 0 },
           "<"
         );
+
+      // Animation sequence
+      const tl2 = gsap.timeline({ repeat: -1 });
+      tl2
+        // Scene 1
+        .to(nodes.RightForeArm.rotation, {
+          x: "+=0.1",
+          z: "-=0.3",
+          duration: 2,
+          ease: "power1.inOut",
+        })
+        .to(
+          nodes.Head.rotation,
+          {
+            y: "+=0.5",
+            z: "-=0.3",
+            duration: 2,
+            ease: "power1.inOut",
+          },
+          "<"
+        )
+        .to(
+          nodes.RightHandIndex1.rotation,
+          {
+            x: "+=0.1",
+            duration: 0.5,
+            yoyo: true,
+            repeat: 3,
+            ease: "power1.inOut",
+          },
+          ">"
+        )
+
+        // Scene 2
+        .to(
+          nodes.RightForeArm.rotation,
+          {
+            x: "-=0.1",
+            z: "+=0.3",
+            duration: 2,
+            ease: "power1.inOut",
+          },
+          ">+1"
+        )
+        .to(
+          nodes.Head.rotation,
+          {
+            y: "-=0.5",
+            z: "+=0.3",
+            duration: 2,
+            ease: "power1.inOut",
+          },
+          "<"
+        )
+
+        // Scene 3
+        .to(
+          nodes.RightArm.rotation,
+          { x: 0.2, y: -0.7, z: -1.2, duration: 2, ease: "power1.inOut" },
+          ">+1"
+        )
+        .to(
+          nodes.RightForeArm.rotation,
+          { x: 0.3, y: 1.4, z: -1.2, duration: 1, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightForeArm.rotation,
+          { x: 0.3, y: 0.9, z: -1.4, duration: 1, ease: "power1.inOut" },
+          ">"
+        )
+        .to(
+          nodes.RightHand.rotation,
+          { x: 0, y: -1.4, z: 0, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+
+        .to(
+          nodes.RightHandThumb1.rotation,
+          { x: -0.2, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandIndex1.rotation,
+          { x: Math.PI / 12, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandIndex2.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandIndex3.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandMiddle1.rotation,
+          { x: Math.PI / 12, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandMiddle2.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandMiddle3.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandRing1.rotation,
+          { x: Math.PI / 12, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandRing2.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandRing3.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky1.rotation,
+          { x: Math.PI / 12, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky2.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky3.rotation,
+          { x: Math.PI / 6, duration: 2, ease: "power1.inOut" },
+          "<"
+        )
+
+        // Scene 4
+        .to(
+          nodes.LeftHandIndex1.rotation,
+          {
+            x: "+=0.2",
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power1.inOut",
+          },
+          ">+0.5"
+        )
+        .to(nodes.RightHandIndex1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.LeftHandRing1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.RightHandRing1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.LeftHandIndex1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.LeftHandThumb1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.LeftHandMiddle1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.LeftHandPinky1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.RightHandMiddle1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+        .to(nodes.RightHandPinky1.rotation, {
+          x: "+=0.2",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power1.inOut",
+        })
+
+        // Scene 5
+        .to(
+          nodes.RightArm.rotation,
+          { x: 0, y: -0.7, z: -0.9, duration: 2 },
+          ">+1"
+        )
+        .to(
+          nodes.RightForeArm.rotation,
+          { x: -0.4, y: 1.4, z: -0.4, duration: 1 },
+          "<"
+        )
+        .to(nodes.RightHand.rotation, { x: 0, y: -0.5, z: 0, duration: 2 }, "<")
+
+        .to(nodes.RightHandIndex1.rotation, { x: 0, duration: 2 }, "<")
+        .to(nodes.RightHandMiddle1.rotation, { x: 0, duration: 2 }, "<")
+        .to(nodes.RightHandThumb1.rotation, { x: -0.2, duration: 2 }, "<")
+        .to(
+          nodes.RightHandRing1.rotation,
+          { x: Math.PI / 12, duration: 2 },
+          "<"
+        )
+        .to(nodes.RightHandRing2.rotation, { x: Math.PI / 6, duration: 2 }, "<")
+        .to(nodes.RightHandRing3.rotation, { x: Math.PI / 6, duration: 2 }, "<")
+        .to(
+          nodes.RightHandPinky1.rotation,
+          { x: Math.PI / 12, duration: 2 },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky2.rotation,
+          { x: Math.PI / 6, duration: 2 },
+          "<"
+        )
+        .to(
+          nodes.RightHandPinky3.rotation,
+          { x: Math.PI / 6, duration: 2 },
+          "<"
+        )
+        .to(
+          nodes.RightForeArm.rotation,
+          { x: -0.45, y: 0.7, z: -0.4, duration: 1 },
+          ">"
+        );
+
+      return () => {
+        tl.kill();
+        tl2.kill();
+      };
     }
   }, [nodes]);
 
