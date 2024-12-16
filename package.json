@@ -21,6 +21,7 @@
     "@react-three/fiber": "^8.17.10",
     "autoprefixer": "^10.4.20",
     "gsap": "^3.12.5",
+    "howler": "^2.2.4",
     "leva": "^0.9.35",
     "portfolio": "file:",
     "react": "^18.3.1",

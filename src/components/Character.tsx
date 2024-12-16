@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGLTF } from "@react-three/drei";
 import { useGraph } from "@react-three/fiber";
 import React, { useEffect, useRef } from "react";
@@ -5,8 +6,30 @@ import * as THREE from "three";
 import { SkeletonUtils } from "three-stdlib";
 import gsap from "gsap";
 
-export default function Character(props: JSX.IntrinsicElements["group"]) {
+interface CharacterProps {
+  setMouseMove: React.Dispatch<React.SetStateAction<boolean>>;
+  [key: string]: any;
+}
+
+export default function Character({ setMouseMove, ...props }: CharacterProps): JSX.Element {
   const groupRef = useRef<THREE.Group>(null);
+  const clickSound = React.useMemo(() => {
+    const sound = new Audio("/sounds/mouse-click.mp3");
+    sound.volume = 1;
+    return sound;
+  }, []);
+
+  const keyboardSound = React.useMemo(() => {
+    const sound = new Audio("/sounds/keyboard.mp3");
+    sound.volume = 1;
+    return sound;
+  }, []);
+
+  const scrollingSound = React.useMemo(() => {
+    const sound = new Audio("/sounds/scrolling.mp3");
+    sound.volume = 0.5;
+    return sound;
+  }, []);
 
   const { scene } = useGLTF("/models/character.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -111,12 +134,19 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
       const tl2 = gsap.timeline({ repeat: -1 });
       tl2
         // Scene 1
-        .to(nodes.RightForeArm.rotation, {
-          x: "+=0.1",
-          z: "-=0.3",
-          duration: 2,
-          ease: "power1.inOut",
-        })
+        .to(
+          nodes.RightForeArm.rotation,
+          {
+            x: "+=0.1",
+            z: "-=0.3",
+            duration: 2,
+            ease: "power1.inOut",
+            onStart: () => {
+              setMouseMove(true);
+            }
+          },
+          ">+1"
+        )
         .to(
           nodes.Head.rotation,
           {
@@ -133,7 +163,44 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
             x: "+=0.1",
             duration: 0.5,
             yoyo: true,
-            repeat: 3,
+            ease: "power1.inOut",
+            onStart: () => {
+              clickSound.currentTime = 0;
+              clickSound.play();
+            },
+          },
+          ">"
+        )
+        .to(
+          nodes.RightHandIndex1.rotation,
+          {
+            x: "-=0.1",
+            duration: 0.5,
+            yoyo: true,
+            ease: "power1.inOut",
+          },
+          ">"
+        )
+        .to(
+          nodes.RightHandIndex1.rotation,
+          {
+            x: "+=0.1",
+            duration: 0.5,
+            yoyo: true,
+            ease: "power1.inOut",
+            onStart: () => {
+              clickSound.currentTime = 0;
+              clickSound.play();
+            },
+          },
+          ">"
+        )
+        .to(
+          nodes.RightHandIndex1.rotation,
+          {
+            x: "-=0.1",
+            duration: 0.5,
+            yoyo: true,
             ease: "power1.inOut",
           },
           ">"
@@ -147,6 +214,9 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
             z: "+=0.3",
             duration: 2,
             ease: "power1.inOut",
+            onComplete: () => {
+              setMouseMove(false);
+            },
           },
           ">+1"
         )
@@ -157,6 +227,10 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
             z: "+=0.3",
             duration: 2,
             ease: "power1.inOut",
+            onComplete: () => {
+              scrollingSound.currentTime = 0;
+              scrollingSound.play();
+            },
           },
           "<"
         )
@@ -164,8 +238,17 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
         // Scene 3
         .to(
           nodes.RightArm.rotation,
-          { x: 0.2, y: -0.7, z: -1.2, duration: 2, ease: "power1.inOut" },
-          ">+1"
+          {
+            x: 0.2,
+            y: -0.7,
+            z: -1.2,
+            duration: 2,
+            ease: "power1.inOut",
+            onStart: () => {
+              scrollingSound.pause();
+            },
+          },
+          ">+2"
         )
         .to(
           nodes.RightForeArm.rotation,
@@ -258,6 +341,10 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
             yoyo: true,
             repeat: 1,
             ease: "power1.inOut",
+            onStart: () => {
+              keyboardSound.currentTime = 0;
+              keyboardSound.play();
+            },
           },
           ">+0.5"
         )
@@ -323,6 +410,9 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
           yoyo: true,
           repeat: 1,
           ease: "power1.inOut",
+          onComplete: () => {
+            keyboardSound.pause();
+          },
         })
 
         // Scene 5
@@ -372,9 +462,12 @@ export default function Character(props: JSX.IntrinsicElements["group"]) {
       return () => {
         tl.kill();
         tl2.kill();
+        clickSound.pause();
+        keyboardSound.pause();
+        scrollingSound.pause();
       };
     }
-  }, [nodes]);
+  }, [nodes, clickSound, keyboardSound, scrollingSound, setMouseMove]);
 
   return (
     <group ref={groupRef} {...props} dispose={null}>
