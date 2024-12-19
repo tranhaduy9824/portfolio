@@ -14,7 +14,11 @@ import HeroCamera from "../components/HeroCamera";
 import * as THREE from "three";
 import ScrollContent from "../components/ScrollContent";
 
-const Hero = () => {
+interface HeroProps {
+  sound: boolean;
+}
+
+const Hero = ({ sound }: HeroProps) => {
   const [mouseMove, setMouseMove] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -42,6 +46,7 @@ const Hero = () => {
                     position={[-1.2, 1.5, 0.2]}
                     scale={1.5}
                     rotation={[0.2, 0, 0]}
+                    sound={sound}
                   />
                   <Window
                     position={[-0.62, 0.85, 0.05]}
@@ -71,6 +76,7 @@ const Hero = () => {
                     rotation={[0.2, Math.PI - 0.3, 0]}
                     scale={1.15}
                     setMouseMove={setMouseMove}
+                    sound={sound}
                   />
                 </Scroll>
               </group>

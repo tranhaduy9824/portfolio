@@ -10,6 +10,11 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 
+interface NavbarProps {
+  sound: boolean;
+  setSound: () => void;
+}
+
 const NavItems = () => (
   <ul className="nav-ul">
     {navLinks.map(({ id, href, name }) => (
@@ -20,12 +25,13 @@ const NavItems = () => (
   </ul>
 );
 
-const Navbar = () => {
-  const [isVolume, setIsVolume] = useState(true);
+const Navbar = ({ sound, setSound }: NavbarProps) => {
+  const [isVolume, setIsVolume] = useState(sound);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
   const toggleVolume = () => {
+    setSound();
     setIsVolume(!isVolume);
   };
 

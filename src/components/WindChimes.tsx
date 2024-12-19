@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -5,13 +6,28 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-function WindChimes(props: JSX.IntrinsicElements["group"]) {
+function WindChimes(props: any) {
   const { nodes, materials } = useGLTF("/models/windChimes.glb") as any;
 
   const ringRef = useRef<THREE.Group>(null);
   const pivotRef = useRef<THREE.Object3D>(null);
-  const clickSound = new Audio("/sounds/wind-chimes.mp3");
-  clickSound.volume = 1;
+  const sound = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    sound.current = new Audio("/sounds/wind-chimes.mp3");
+    sound.current.loop = true;
+    sound.current.volume = props.sound ? 1 : 0;
+    return () => {
+      sound.current?.pause();
+      sound.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (sound.current) {
+      sound.current.volume = props.sound ? 1 : 0;
+    }
+  }, [props.sound]);
 
   useEffect(() => {
     if (pivotRef.current && ringRef.current) {
@@ -72,12 +88,16 @@ function WindChimes(props: JSX.IntrinsicElements["group"]) {
           },
           "<"
         )
-        .to(pivotRef.current.rotation, {
-          x: "+=0.07",
-          z: "+=0.07",
-          duration: 1,
-          ease: "power1.inOut",
-        }, ">")
+        .to(
+          pivotRef.current.rotation,
+          {
+            x: "+=0.07",
+            z: "+=0.07",
+            duration: 1,
+            ease: "power1.inOut",
+          },
+          ">"
+        )
         .to(
           ringRef.current?.rotation,
           {
@@ -92,8 +112,14 @@ function WindChimes(props: JSX.IntrinsicElements["group"]) {
   }, []);
 
   useFrame(() => {
-    if (pivotRef.current) {
-      clickSound.play();
+    if (props.sound) {
+      if (sound.current && sound.current.paused) {
+        sound.current.play();
+      }
+    } else {
+      if (sound.current) {
+        sound.current.pause();
+      }
     }
   });
 

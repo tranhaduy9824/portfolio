@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGLTF } from "@react-three/drei";
 import { useGraph } from "@react-three/fiber";
@@ -13,23 +14,38 @@ interface CharacterProps {
 
 export default function Character({ setMouseMove, ...props }: CharacterProps): JSX.Element {
   const groupRef = useRef<THREE.Group>(null);
-  const clickSound = React.useMemo(() => {
-    const sound = new Audio("/sounds/mouse-click.mp3");
-    sound.volume = 1;
-    return sound;
+  const clickSound = useRef<HTMLAudioElement | null>(null);
+  const keyboardSound = useRef<HTMLAudioElement | null>(null);
+  const scrollingSound = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    clickSound.current = new Audio("/sounds/mouse-click.mp3");
+    clickSound.current.volume = props.sound ? 1 : 0;
+
+    keyboardSound.current = new Audio("/sounds/keyboard.mp3");
+    keyboardSound.current.volume = props.sound ? 1 : 0;
+
+    scrollingSound.current = new Audio("/sounds/scrolling.mp3");
+    scrollingSound.current.volume = props.sound ? 0.5 : 0;
+    return () => {
+      clickSound.current?.pause();
+      clickSound.current = null;
+    };
   }, []);
 
-  const keyboardSound = React.useMemo(() => {
-    const sound = new Audio("/sounds/keyboard.mp3");
-    sound.volume = 1;
-    return sound;
-  }, []);
+  useEffect(() => {
+    if (clickSound.current) {
+      clickSound.current.volume = props.sound ? 1 : 0;
+    }
 
-  const scrollingSound = React.useMemo(() => {
-    const sound = new Audio("/sounds/scrolling.mp3");
-    sound.volume = 0.5;
-    return sound;
-  }, []);
+    if (keyboardSound.current) {
+      keyboardSound.current.volume = props.sound ? 1 : 0;
+    }
+
+    if (scrollingSound.current) {
+      scrollingSound.current.volume = props.sound ? 0.5 : 0;
+    }
+  }, [props.sound]);
 
   const { scene } = useGLTF("/models/character.glb");
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
@@ -165,8 +181,10 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             yoyo: true,
             ease: "power1.inOut",
             onStart: () => {
-              clickSound.currentTime = 0;
-              clickSound.play();
+              if (clickSound.current) {
+                clickSound.current.currentTime = 0;
+                clickSound.current.play();
+              }
             },
           },
           ">"
@@ -189,8 +207,10 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             yoyo: true,
             ease: "power1.inOut",
             onStart: () => {
-              clickSound.currentTime = 0;
-              clickSound.play();
+              if (clickSound.current) {
+                clickSound.current.currentTime = 0;
+                clickSound.current.play();
+              }
             },
           },
           ">"
@@ -228,8 +248,10 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             duration: 2,
             ease: "power1.inOut",
             onComplete: () => {
-              scrollingSound.currentTime = 0;
-              scrollingSound.play();
+              if (scrollingSound.current) {
+                scrollingSound.current.currentTime = 0;
+                scrollingSound.current.play();
+              }
             },
           },
           "<"
@@ -245,7 +267,9 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             duration: 2,
             ease: "power1.inOut",
             onStart: () => {
-              scrollingSound.pause();
+              if (scrollingSound.current) {
+                scrollingSound.current.pause();
+              }
             },
           },
           ">+2"
@@ -342,8 +366,10 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             repeat: 1,
             ease: "power1.inOut",
             onStart: () => {
-              keyboardSound.currentTime = 0;
-              keyboardSound.play();
+              if (keyboardSound.current) {
+                keyboardSound.current.currentTime = 0;
+                keyboardSound.current.play();
+              }
             },
           },
           ">+0.5"
@@ -411,7 +437,9 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
           repeat: 1,
           ease: "power1.inOut",
           onComplete: () => {
-            keyboardSound.pause();
+            if (keyboardSound.current) {
+              keyboardSound.current.pause();
+            }
           },
         })
 
@@ -462,9 +490,15 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
       return () => {
         tl.kill();
         tl2.kill();
-        clickSound.pause();
-        keyboardSound.pause();
-        scrollingSound.pause();
+        if (clickSound.current) {
+          clickSound.current.pause();
+        }
+        if (keyboardSound.current) {
+          keyboardSound.current.pause();
+        }
+        if (scrollingSound.current) {
+          scrollingSound.current.pause();
+        }
       };
     }
   }, [nodes, clickSound, keyboardSound, scrollingSound, setMouseMove]);
