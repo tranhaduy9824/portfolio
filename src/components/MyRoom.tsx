@@ -17,9 +17,6 @@ function MyRoom(props: any) {
         z: "+=0.01",
         duration: 2,
         ease: "power1.inOut",
-        onUpdate: () => {
-          console.log("Position after move:", mouseRef.current?.position);
-        },
       }).to(
         mouseRef.current.position,
         {
@@ -27,9 +24,6 @@ function MyRoom(props: any) {
           z: "-=0.01",  
           duration: 2,
           ease: "power1.inOut",
-          onUpdate: () => {
-            console.log("Position after return:", mouseRef.current?.position);
-          },
         },
         ">+3"
       );
