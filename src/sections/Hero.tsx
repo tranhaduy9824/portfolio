@@ -22,6 +22,7 @@ const Hero = ({ sound }: HeroProps) => {
   const [mouseMove, setMouseMove] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const [pointer, setPointer] = useState({ x: 30, y: 30 });
 
   return (
     <section className="min-h-screen w-full relative">
@@ -33,13 +34,16 @@ const Hero = ({ sound }: HeroProps) => {
       >
         <Suspense fallback={<CanvasLoader />}>
           <ScrollControls pages={4}>
+            {/* <OrbitControls /> */}
             <PerspectiveCamera  
               ref={cameraRef}
               makeDefault
               position={[-3.5, 1.4, 7]}
               rotation={[0, 0.1, 0]}
+              near={0.1} // Tăng từ 0.01 lên 0.1
+  far={1000}
             />
-            <HeroCamera isMobile={isMobile}>
+            <HeroCamera isMobile={isMobile} pointer={pointer}>
               <group position={[0, 0, 0]} scale={1.6}>
                 <Scroll>
                   <WindChimes
@@ -89,7 +93,7 @@ const Hero = ({ sound }: HeroProps) => {
 
           <ScrollControls pages={3}>
             <Scroll>
-              <ScrollContent cameraRef={cameraRef} />
+              <ScrollContent cameraRef={cameraRef} setPointer={setPointer} />
             </Scroll>
           </ScrollControls>
         </Suspense>

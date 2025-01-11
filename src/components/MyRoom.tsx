@@ -3,6 +3,8 @@ import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import Laptop from "./Laptop";
+import Screen from "./Screen";
 
 function MyRoom(props: any) {
   const { nodes, materials } = useGLTF("/models/desk.glb") as any;
@@ -194,48 +196,7 @@ function MyRoom(props: any) {
             />
           </group>
         </group>
-        <group
-          position={[2.485, -0.079, -2.249]}
-          rotation={[Math.PI, 0, Math.PI]}
-          scale={0.655}
-        >
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002"].geometry}
-            material={materials.Color_}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002_1"].geometry}
-            material={materials["*19"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002_2"].geometry}
-            material={materials["*20"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002_3"].geometry}
-            material={materials.Material}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002_4"].geometry}
-            material={materials["*22"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-apple_imac_pro002_5"].geometry}
-            material={materials.overview_hero4_20091020}
-          />
-        </group>
+        <Screen nodes={nodes} materials={materials} />
         <group position={[-0.576, 0, -0.12]} ref={mouseRef}>
           <group position={[-0.001, 0, 0.002]}>
             <group position={[0.018, 0, -0.021]}>
@@ -668,7 +629,7 @@ function MyRoom(props: any) {
       {/* Home */}
       <group
         position={[1.973, 1.388, -0.9]}
-        rotation={[-3.12, -Math.PI / 2, -Math.PI]}
+        rotation={[-3.14, -Math.PI / 2, -Math.PI]}
         scale={0.56}
       >
         <mesh
@@ -821,107 +782,7 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      {/* Laptop */}
-      <group position={[-29.917, -0.34, -16.228]}>
-        <group
-          position={[31.303, 1.083, 15.735]}
-          rotation={[3.089, -0.603, 3.109]}
-          scale={0.034}
-        >
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_1"].geometry}
-            material={materials["[Metal_Corrogated_Shiny]"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_2"].geometry}
-            material={materials["[0136_Charcoal]"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_3"].geometry}
-            material={materials["<LightGray>"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_4"].geometry}
-            material={materials["[0129_WhiteSmoke]"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_5"].geometry}
-            material={materials["[Color_004]"]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-clavier_6"].geometry}
-            material={materials["[0137_Black]"]}
-          />
-        </group>
-        <group position={[0, 0.146, -8.405]}>
-          <group
-            position={[31.465, 0.954, 24.374]}
-            rotation={[1.864, -0.194, 2.566]}
-            scale={0.034}
-          >
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["G-ecran_1"].geometry}
-              material={materials["[0129_WhiteSmoke]"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["G-ecran_2"].geometry}
-              material={materials["[Metal_Corrogated_Shiny]"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["G-ecran_3"].geometry}
-              material={materials["<LightGray>"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["G-ecran_4"].geometry}
-              material={materials["[Translucent_Glass_Gray]"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["G-ecran_5"].geometry}
-              material={materials["[Color_009]"]}
-            />
-          </group>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["C-Macbook_Pro"].geometry}
-            material={materials["[0129_WhiteSmoke]"]}
-            position={[31.275, 0.963, 24.469]}
-            rotation={[1.923, -0.159, 2.746]}
-            scale={[0.003, 0.006, 0.003]}
-          />
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes["G-Object052"].geometry}
-            material={materials["[0136_Charcoal]"]}
-            position={[31.395, 0.942, 24.405]}
-            rotation={[1.7, -0.096, 2.537]}
-            scale={0.034}
-          />
-        </group>
-      </group>
+      <Laptop nodes={nodes} materials={materials} />
       <group position={[-15.247, -0.33, -16.328]}>
         <group position={[0, 0.326, -8.461]}>
           <mesh

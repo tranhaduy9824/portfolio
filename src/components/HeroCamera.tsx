@@ -7,19 +7,25 @@ import * as THREE from "three";
 interface HeroCameraProps {
   children: ReactNode;
   isMobile: boolean;
+  pointer: { x: number; y: number };
 }
 
-const HeroCamera = ({ children, isMobile }: HeroCameraProps) => {
+const HeroCamera = ({ children, isMobile, pointer }: HeroCameraProps) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
     easing.damp3(state.camera.position, [-3.7, 1.4, 7], 0.25, delta);
 
-      if (!isMobile) {
-        if (groupRef.current) {
-          easing.dampE(groupRef.current.rotation, [-state.pointer.y / 25, -state.pointer.x / 30, 0], 0.25, delta);
-        }
+    if (!isMobile) {
+      if (groupRef.current) {
+        easing.dampE(
+          groupRef.current.rotation,
+          [-state.pointer.y / pointer.x, -state.pointer.x / pointer.y, 0],
+          0.25,
+          delta
+        );
       }
+    }
   });
 
   return <group ref={groupRef}>{children}</group>;
