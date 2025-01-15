@@ -8,20 +8,21 @@ interface HeroCameraProps {
   children: ReactNode;
   isMobile: boolean;
   pointer: { x: number; y: number };
+  positionCamera: [number, number, number];
 }
 
-const HeroCamera = ({ children, isMobile, pointer }: HeroCameraProps) => {
+const HeroCamera = ({ children, isMobile, pointer, positionCamera }: HeroCameraProps) => {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
-    easing.damp3(state.camera.position, [-3.7, 1.4, 7], 0.25, delta);
+    easing.damp3(state.camera.position, positionCamera, 0.8, delta);
 
     if (!isMobile) {
       if (groupRef.current) {
         easing.dampE(
           groupRef.current.rotation,
           [-state.pointer.y / pointer.x, -state.pointer.x / pointer.y, 0],
-          0.25,
+          0.8,
           delta
         );
       }
