@@ -17,14 +17,19 @@ import { useMediaQuery } from "react-responsive";
 import HeroCamera from "../components/HeroCamera";
 import * as THREE from "three";
 import ScrollContent from "../components/ScrollContent";
+import { responsive } from "../constants";
 
 interface HeroProps {
   sound: boolean;
+  setMouseSelected: (value: boolean) => void;
 }
 
-const Hero = ({ sound }: HeroProps) => {
+const Hero = ({ sound, setMouseSelected }: HeroProps) => {
   const [mouseMove, setMouseMove] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const isSmallTablet = useMediaQuery({ maxWidth: 1024 });
+  const isTablet = useMediaQuery({ maxWidth: 1200 });
+  const isSmallDesktop = useMediaQuery({ maxWidth: 1340 });
 
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
 
@@ -32,6 +37,16 @@ const Hero = ({ sound }: HeroProps) => {
   const [positionCamera, setPositionCamera] = useState<
     [number, number, number]
   >([-3.5, 1.4, 7]);
+
+  const currentConfig = isMobile
+    ? responsive.mobile
+    : isSmallTablet
+    ? responsive.smallTablet
+    : isTablet
+    ? responsive.tablet
+    : isSmallDesktop
+    ? responsive.smallDesktop
+    : responsive.desktop;
 
   return (
     <section className="min-h-screen w-full relative">
@@ -52,9 +67,10 @@ const Hero = ({ sound }: HeroProps) => {
           <spotLight position={[5, 10, 5]} angle={0.2} intensity={0.8} />
 
           <Introduce
-            position={[-7.2, 1.2, 4]}
+            position={currentConfig.introducePosition}
             rotation={[0, 0.2, 0]}
-            scale={0.45}
+            scale={currentConfig.introduceScale}
+            setMouseSelected={setMouseSelected}
           />
 
           <HeroCamera
@@ -62,7 +78,7 @@ const Hero = ({ sound }: HeroProps) => {
             pointer={pointer}
             positionCamera={positionCamera}
           >
-            <group position={[0, 0, 0]} scale={1.6}>
+            <group position={[0, 0, 0]} scale={currentConfig.groupScale}>
               <WindChimes
                 position={[-1.2, 1.5, 0.2]}
                 scale={1.5}

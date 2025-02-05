@@ -37,7 +37,7 @@ const ScrollContent = ({
         setPointer({ x: 30, y: 30 });
         break;
       case 1:
-        targetPosition.set(-3.5, 2.8, 1.5);
+        targetPosition.set(-3., 2.8, 1.5);
         targetRotation.set(0.3, 1.3, 0);
         setPositionCamera([-3.5, 2.8, 1.5]);
         setPointer({ x: 300, y: 300 });
@@ -58,8 +58,8 @@ const ScrollContent = ({
         break;
     }
 
-    easing.damp3(cameraRef.current.position, targetPosition, 0.8, delta);
-    easing.dampE(cameraRef.current.rotation, targetRotation, 0.8, delta);
+    easing.damp3(cameraRef.current.position, targetPosition, 1, delta);
+    easing.dampE(cameraRef.current.rotation, targetRotation, 0.5, delta);
   });
 
   return null;

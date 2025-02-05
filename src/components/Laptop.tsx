@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useTexture, useVideoTexture } from "@react-three/drei";
+import { useVideoTexture } from "@react-three/drei";
 import * as THREE from "three";
 
 const Laptop = ({ nodes, materials }: any) => {

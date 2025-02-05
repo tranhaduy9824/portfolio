@@ -3,16 +3,51 @@ import { useRef, useEffect } from "react";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
+import { useFrame } from "@react-three/fiber";
+import { createRoundedRectShape } from "../constants";
 
-const Introduce = ({ ...props }: { [key: string]: any }) => {
+interface IntroduceProps {
+  setMouseSelected: (value: boolean) => void;
+  position: any;
+  rotation: [number, number, number];
+  scale: any;
+}
+
+const WavingHand = ({ position }: { position: [number, number, number] }) => {
+  const handRef = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }) => {
+    if (handRef.current) {
+      handRef.current.rotation.z = Math.sin(clock.getElapsedTime() * 3) * 0.2;
+    }
+  });
+
+  return (
+    <group ref={handRef} position={position}>
+      <Text
+        fontSize={0.6}
+        fontWeight={600}
+        color="black"
+        position={[-0.2, 0.3, 0]}
+      >
+        👋
+      </Text>
+    </group>
+  );
+};
+
+const Introduce: React.FC<IntroduceProps> = ({
+  setMouseSelected,
+  ...props
+}) => {
   const buttonRef = useRef<THREE.Mesh>(null);
 
   useEffect(() => {
     if (buttonRef.current) {
       gsap.fromTo(
         buttonRef.current.position,
-        { y: -0.2, opacity: 0 },
-        { y: -0.15, opacity: 1, duration: 1 }
+        { y: -0.9, opacity: 0 },
+        { y: -0.8, opacity: 1, duration: 1 }
       );
     }
   }, []);
@@ -36,44 +71,6 @@ const Introduce = ({ ...props }: { [key: string]: any }) => {
     }
   };
 
-  const createRoundedRectShape = (
-    width: number,
-    height: number,
-    radius: number
-  ) => {
-    const shape = new THREE.Shape();
-    shape.moveTo(-width / 2 + radius, -height / 2);
-    shape.lineTo(width / 2 - radius, -height / 2);
-    shape.quadraticCurveTo(
-      width / 2,
-      -height / 2,
-      width / 2,
-      -height / 2 + radius
-    );
-    shape.lineTo(width / 2, height / 2 - radius);
-    shape.quadraticCurveTo(
-      width / 2,
-      height / 2,
-      width / 2 - radius,
-      height / 2
-    );
-    shape.lineTo(-width / 2 + radius, height / 2);
-    shape.quadraticCurveTo(
-      -width / 2,
-      height / 2,
-      -width / 2,
-      height / 2 - radius
-    );
-    shape.lineTo(-width / 2, -height / 2 + radius);
-    shape.quadraticCurveTo(
-      -width / 2,
-      -height / 2,
-      -width / 2 + radius,
-      -height / 2
-    );
-    return shape;
-  };
-
   const roundedRectShape = createRoundedRectShape(2, 0.5, 0.2);
   const geometry = new THREE.ExtrudeGeometry(roundedRectShape, {
     depth: 0.1,
@@ -82,19 +79,23 @@ const Introduce = ({ ...props }: { [key: string]: any }) => {
 
   return (
     <group {...props}>
-      <Text
-        fontSize={0.6}
-        fontWeight={600}
-        position={[0, 1, 0]}
-        color="black"
-        anchorX="left"
-        anchorY="middle"
-      >
-        Hi, my name is Ha Duy. 👋
-      </Text>
+      <>
+        <Text
+          fontSize={0.6}
+          fontWeight={600}
+          position={[0, 1, 0]}
+          color="black"
+          anchorX="left"
+          anchorY="middle"
+        >
+          Hi, my {"\n"}
+          name is Ha Duy.
+        </Text>
+        <WavingHand position={[5.3, 0.3, 0]} />
+      </>
       <Text
         fontSize={0.2}
-        position={[0.05, 0.5, 0]}
+        position={[0.05, 0, 0]}
         color="gray"
         anchorX="left"
         anchorY="middle"
@@ -105,10 +106,18 @@ const Introduce = ({ ...props }: { [key: string]: any }) => {
         ref={buttonRef}
         geometry={geometry}
         position={[1.11, 0, 0]}
-        onPointerEnter={() => hoverEffect(1.01, "#06b6d4")}
-        onPointerLeave={() => hoverEffect(1, "#0284c7")}
+        onPointerEnter={() => {
+          hoverEffect(1.01, "#06b6d4");
+          setMouseSelected(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerLeave={() => {
+          hoverEffect(1, "#38bdf8");
+          setMouseSelected(false);
+          document.body.style.cursor = "auto";
+        }}
       >
-        <meshStandardMaterial color="#0284c7" />
+        <meshStandardMaterial color="#38bdf8" />
         <Text
           fontSize={0.2}
           position={[0, 0, 0.11]}
