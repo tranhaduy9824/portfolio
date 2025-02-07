@@ -103,7 +103,7 @@ body {
 }
 
 .airplane::before {
-  content: "\f072"; 
+  content: "\f135"; 
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   color: #24ecff;
