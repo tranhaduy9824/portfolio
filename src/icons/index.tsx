@@ -1,4 +1,4 @@
-export const HeaderLogo = ({ className }: { className?: string }) => {
+export const HeaderLogo = ({ className, isLampOn }: { className?: string; isLampOn: boolean }) => {
   return (
     <svg
       id="header-logo-svg"
@@ -18,7 +18,7 @@ export const HeaderLogo = ({ className }: { className?: string }) => {
         </clipPath>
       </defs>
       <g clipPath="url(#logo-clip-path)">
-        <rect width="100%" height="100%" fill="currentColor" />
+        <rect width="100%" height="100%" fill={isLampOn ? "white" : "currentColor"} />
       </g>
     </svg>
   );

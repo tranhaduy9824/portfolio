@@ -13,19 +13,24 @@ import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 interface NavbarProps {
   sound: boolean;
   setSound: () => void;
+  isLampOn: boolean;
 }
 
-const NavItems = () => (
+const NavItems = ({ isLampOn }: { isLampOn: boolean }) => (
   <ul className="nav-ul">
     {navLinks.map(({ id, href, name }) => (
-      <a key={id} href={href} className="nav-li_a">
+      <a
+        key={id}
+        href={href}
+        className={`nav-li_a ${isLampOn ? "text-white-700" : "text-black"}`}
+      >
         {name}
       </a>
     ))}
   </ul>
 );
 
-const Navbar = ({ sound, setSound }: NavbarProps) => {
+const Navbar = ({ sound, setSound, isLampOn }: NavbarProps) => {
   const [isVolume, setIsVolume] = useState(sound);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
@@ -56,12 +61,13 @@ const Navbar = ({ sound, setSound }: NavbarProps) => {
   }, [isOpen]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 mx-auto">
-      <div className="flex justify-between items-center py-3 mx-auto px-8">
+    <header>
+      <nav className="fixed top-0 left-0 z-50 py-3 px-8">
         <a href="/" className="text-black">
-          <HeaderLogo className="w-13" />
+          <HeaderLogo className="w-13" isLampOn={isLampOn} />
         </a>
-
+      </nav>
+      <div className="fixed top-0 right-0 z-50 flex justify-between items-center py-5 mx-auto px-8">
         <div className="flex gap-4 z-30">
           <button
             onClick={toggleVolume}
@@ -106,10 +112,9 @@ const Navbar = ({ sound, setSound }: NavbarProps) => {
             />
           </button>
         </div>
-
         <div
           ref={menuRef}
-          className="nav-sidebar bg-white"
+          className={`nav-sidebar ${isLampOn ? "bg-black-500" : "bg-white"}`}
           style={{
             transform: "translateX(100%)",
             height: "100vh",
@@ -117,43 +122,51 @@ const Navbar = ({ sound, setSound }: NavbarProps) => {
             padding: "50px 50px 70px",
           }}
         >
-          <nav className="flex flex-col h-full">
-            <NavItems />
-            <div className="flex ">
+          <div className="flex flex-col h-full">
+            <NavItems isLampOn={isLampOn} />
+            <nav className="flex ">
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faFacebook}
                   fontSize={30}
-                  className="mr-4 text-gray-500 hover-color-change hover:scale-110 transition-all"
+                  className={`mr-4 ${
+                    isLampOn ? "text-gray-400" : "text-gray-500"
+                  } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faInstagram}
                   fontSize={30}
-                  className="mr-4 text-gray-500 hover-color-change hover:scale-110 transition-all"
+                  className={`mr-4 ${
+                    isLampOn ? "text-gray-400" : "text-gray-500"
+                  } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faGithub}
                   fontSize={30}
-                  className="mr-4 text-gray-500 hover-color-change hover:scale-110 transition-all"
+                  className={`mr-4 ${
+                    isLampOn ? "text-gray-400" : "text-gray-500"
+                  } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faEnvelope}
                   fontSize={30}
-                  className="mr-4 text-gray-500 hover-color-change hover:scale-110 transition-all"
+                  className={`mr-4 ${
+                    isLampOn ? "text-gray-400" : "text-gray-500"
+                  } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
-            </div>
+            </nav>
             <hr className="my-6" />
-            <div className="text-gray-500">
+            <div className={`${isLampOn ? "text-gray-400" : "text-gray-500"}`}>
               <span>Music produced by Pixapay</span>
             </div>
-          </nav>
+          </div>
         </div>
       </div>
     </header>

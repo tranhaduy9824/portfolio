@@ -1,7 +1,18 @@
 import { Html, useProgress } from "@react-three/drei";
+import { useEffect } from "react";
 
-const CanvasLoader = () => {
+interface CanvasLoaderProps {
+  setIsLoaded: (value: boolean) => void;
+}
+
+const CanvasLoader = ({ setIsLoaded }: CanvasLoaderProps) => {
   const { progress } = useProgress();
+
+  useEffect(() => {
+    if (progress === 100) {
+      setIsLoaded(true);
+    }
+  }, [progress, setIsLoaded]);
 
   return (
     <Html
@@ -14,8 +25,15 @@ const CanvasLoader = () => {
         flexDirection: "column",
       }}
     >
-      <span className="canvas-loader"/>
-      <p style={{fontSize: 14, color: "#0284c7", fontWeight: 800, marginTop: 40}}>
+      <span className="canvas-loader" />
+      <p
+        style={{
+          fontSize: 14,
+          color: "#0284c7",
+          fontWeight: 800,
+          marginTop: 40,
+        }}
+      >
         {progress !== 0 ? `${progress.toFixed(2)}%` : "Loading..."}
       </p>
     </Html>

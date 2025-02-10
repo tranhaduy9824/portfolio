@@ -8,12 +8,13 @@ import { createRoundedRectShape } from "../constants";
 
 interface IntroduceProps {
   setMouseSelected: (value: boolean) => void;
+  isLampOn: boolean;
   position: any;
   rotation: [number, number, number];
   scale: any;
 }
 
-const WavingHand = ({ position }: { position: [number, number, number] }) => {
+const WavingHand = ({ position, isLampOn }: { position: [number, number, number], isLampOn:boolean }) => {
   const handRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock }) => {
@@ -27,7 +28,7 @@ const WavingHand = ({ position }: { position: [number, number, number] }) => {
       <Text
         fontSize={0.6}
         fontWeight={600}
-        color="black"
+        color={isLampOn ? "white" : "black"}
         position={[-0.2, 0.3, 0]}
       >
         👋
@@ -38,6 +39,7 @@ const WavingHand = ({ position }: { position: [number, number, number] }) => {
 
 const Introduce: React.FC<IntroduceProps> = ({
   setMouseSelected,
+  isLampOn,
   ...props
 }) => {
   const buttonRef = useRef<THREE.Mesh>(null);
@@ -84,14 +86,14 @@ const Introduce: React.FC<IntroduceProps> = ({
           fontSize={0.6}
           fontWeight={600}
           position={[0, 1, 0]}
-          color="black"
+          color={isLampOn ? "white" : "black"}
           anchorX="left"
           anchorY="middle"
         >
           Hi, my {"\n"}
           name is Ha Duy.
         </Text>
-        <WavingHand position={[5.3, 0.3, 0]} />
+        <WavingHand position={[5.3, 0.3, 0]} isLampOn={isLampOn} />
       </>
       <Text
         fontSize={0.2}

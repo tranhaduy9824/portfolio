@@ -18,13 +18,23 @@ import HeroCamera from "../components/HeroCamera";
 import * as THREE from "three";
 import ScrollContent from "../components/ScrollContent";
 import { responsive } from "../constants";
+import { Lamp } from "../components/Lamp";
 
 interface HeroProps {
   sound: boolean;
   setMouseSelected: (value: boolean) => void;
+  setIsLoaded: (value: boolean) => void;
+  isLampOn: boolean;
+  toggleLamp: () => void;
 }
 
-const Hero = ({ sound, setMouseSelected }: HeroProps) => {
+const Hero = ({
+  sound,
+  setMouseSelected,
+  setIsLoaded,
+  isLampOn,
+  toggleLamp,
+}: HeroProps) => {
   const [mouseMove, setMouseMove] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallTablet = useMediaQuery({ maxWidth: 1024 });
@@ -54,7 +64,7 @@ const Hero = ({ sound, setMouseSelected }: HeroProps) => {
         className="w-full h-screen top-0 left-0 bottom-0"
         style={{ position: "absolute" }}
       >
-        <Suspense fallback={<CanvasLoader />}>
+        <Suspense fallback={<CanvasLoader setIsLoaded={setIsLoaded} />}>
           {/* <OrbitControls /> */}
           <PerspectiveCamera
             ref={cameraRef}
@@ -71,6 +81,7 @@ const Hero = ({ sound, setMouseSelected }: HeroProps) => {
             rotation={[0, 0.2, 0]}
             scale={currentConfig.introduceScale}
             setMouseSelected={setMouseSelected}
+            isLampOn={isLampOn}
           />
 
           <HeroCamera
@@ -79,6 +90,14 @@ const Hero = ({ sound, setMouseSelected }: HeroProps) => {
             positionCamera={positionCamera}
           >
             <group position={[0, 0, 0]} scale={currentConfig.groupScale}>
+              <Lamp
+                position={[-1.2, 2.5, 0.15]}
+                scale={[0.9, 0.5, 0.9]}
+                rotation={[0.2, 0, 0]}
+                setMouseSelected={setMouseSelected}
+                isLampOn={isLampOn}
+                onClick={toggleLamp}
+              />
               <WindChimes
                 position={[-1.2, 1.5, 0.2]}
                 scale={1.5}
