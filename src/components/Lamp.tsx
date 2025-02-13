@@ -1,6 +1,7 @@
-import { useGLTF } from "@react-three/drei";
+import { Line, Text, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { GroupProps } from "@react-three/fiber";
+import { useState } from "react";
 
 interface LampProps extends GroupProps {
   setMouseSelected: (value: boolean) => void;
@@ -19,11 +20,24 @@ export function Lamp({
     materials: Record<string, THREE.Material>;
   };
 
+  const [firstClick, setFirstClick] = useState(false);
+
+  const handleClick = () => {
+    if (!firstClick && isLampOn) {
+      setFirstClick(true);
+    }
+    onClick();
+  };
+
+  const textPosition: [number, number, number] = [1, 0, 0];
+  const lineStart = new THREE.Vector3(0.5, 0, 0);
+  const lineEnd = new THREE.Vector3(0.11, 0.12, 0);
+
   return (
     <group
       {...props}
       dispose={null}
-      onClick={onClick}
+      onClick={handleClick}
       onPointerEnter={() => {
         setMouseSelected(true);
         document.body.style.cursor = "pointer";
@@ -85,6 +99,22 @@ export function Lamp({
           position={[-0.004, -0.165, 0.004]}
         />
       </group>
+      {!firstClick && (
+        <>
+          <Text
+            position={textPosition}
+            fontSize={0.15}
+            color={isLampOn ? "white" : "black"}
+          >
+            Click to on/off
+          </Text>
+          <Line
+            points={[lineStart, lineEnd]}
+            color={isLampOn ? "white" : "black"}
+            lineWidth={2}
+          />
+        </>
+      )}
       {isLampOn && (
         <directionalLight
           position={[-1.2, 2.2, 0.15]}

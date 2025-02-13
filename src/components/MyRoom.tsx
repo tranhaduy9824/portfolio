@@ -196,7 +196,7 @@ function MyRoom(props: any) {
             />
           </group>
         </group>
-        <Screen nodes={nodes} materials={materials} />
+        <Screen nodes={nodes} materials={materials} stateAnimate={props.stateAnimate} />
         <group position={[-0.576, 0, -0.12]} ref={mouseRef}>
           <group position={[-0.001, 0, 0.002]}>
             <group position={[0.018, 0, -0.021]}>
@@ -782,7 +782,7 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <Laptop nodes={nodes} materials={materials} />
+      <Laptop nodes={nodes} materials={materials} stateAnimate={props.stateAnimate} />
       <group position={[-15.247, -0.33, -16.328]}>
         <group position={[0, 0.326, -8.461]}>
           <mesh

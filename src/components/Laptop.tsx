@@ -1,34 +1,79 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useVideoTexture } from "@react-three/drei";
+import { useTexture, useVideoTexture } from "@react-three/drei";
+import { useEffect } from "react";
 import * as THREE from "three";
 
-const Laptop = ({ nodes, materials }: any) => {
+const Laptop = ({ nodes, materials, stateAnimate }: any) => {
   const loadingTxt = useVideoTexture("textures/loading.mp4", {
     start: true,
     loop: true,
   });
 
-  if (loadingTxt) {  
+  const errorTxt = useTexture("textures/error.jpg");
+
+  if (loadingTxt) {
     const geometry = nodes["G-ecran_1"].geometry;
-  
+
     const box = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
     const size = new THREE.Vector3();
     box.getSize(size);
-  
+
     const width = size.x;
     const height = size.y;
-  
+
     const video = loadingTxt.image;
-    
-    const scaleFactor = Math.max(width / video.videoWidth, height / video.videoHeight) * 15; 
-  
-    loadingTxt.repeat.set(scaleFactor * (width / video.videoWidth), scaleFactor * (height / video.videoHeight) * 330);
-  
+
+    const scaleFactor =
+      Math.max(width / video.videoWidth, height / video.videoHeight) * 15;
+
+    loadingTxt.repeat.set(
+      scaleFactor * (width / video.videoWidth),
+      scaleFactor * (height / video.videoHeight) * 330
+    );
+
     loadingTxt.offset.set(
-      (1 - (width / video.videoWidth * scaleFactor)) / 1.2,
-      (1 - (height / video.videoHeight * scaleFactor)) / 1.1
+      (1 - (width / video.videoWidth) * scaleFactor) / 1.2,
+      (1 - (height / video.videoHeight) * scaleFactor) / 1.1
     );
   }
+
+  if (errorTxt) {
+    const geometry = nodes["G-ecran_1"].geometry;
+
+    const box = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
+    const size = new THREE.Vector3();
+    box.getSize(size);
+
+    const width = size.x;
+    const height = size.y;
+
+    const image = errorTxt.image;
+
+    const scaleFactor =
+      Math.max(width / image.width, height / image.height) * 7;
+
+    errorTxt.repeat.set(
+      scaleFactor * (width / image.width),
+      scaleFactor * (height / image.height) * 330
+    );
+
+    errorTxt.offset.set(
+      (1 - (width / image.width) * scaleFactor) / 1,
+      (1 - (height / image.height) * scaleFactor) / 1.15
+    );
+  }
+
+  useEffect(() => {
+    if (loadingTxt) {
+      const video = loadingTxt.image;
+      if (stateAnimate === 4) {
+        video.currentTime = 0;
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+  }, [stateAnimate, loadingTxt]);
 
   return (
     <group position={[-29.917, -0.34, -16.228]}>
@@ -88,7 +133,7 @@ const Laptop = ({ nodes, materials }: any) => {
             position={[12.4, 0, -8.4]}
           >
             <meshBasicMaterial
-              map={loadingTxt}
+              map={stateAnimate === 4 ? loadingTxt : errorTxt}
               toneMapped={false}
               side={THREE.DoubleSide}
             />

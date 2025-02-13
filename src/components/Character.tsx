@@ -12,7 +12,10 @@ interface CharacterProps {
   [key: string]: any;
 }
 
-export default function Character({ setMouseMove, ...props }: CharacterProps): JSX.Element {
+export default function Character({
+  setMouseMove,
+  ...props
+}: CharacterProps): JSX.Element {
   const groupRef = useRef<THREE.Group>(null);
   const clickSound = useRef<HTMLAudioElement | null>(null);
   const keyboardSound = useRef<HTMLAudioElement | null>(null);
@@ -158,8 +161,9 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             duration: 2,
             ease: "power1.inOut",
             onStart: () => {
+              props.setStateAnimate(1);
               setMouseMove(true);
-            }
+            },
           },
           ">+1"
         )
@@ -234,6 +238,9 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             z: "+=0.3",
             duration: 2,
             ease: "power1.inOut",
+            onStart: () => {
+              props.setStateAnimate(2);
+            },
             onComplete: () => {
               setMouseMove(false);
             },
@@ -249,6 +256,7 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             ease: "power1.inOut",
             onComplete: () => {
               if (scrollingSound.current) {
+                props.setStateAnimate(6);
                 scrollingSound.current.currentTime = 0;
                 scrollingSound.current.play();
               }
@@ -267,6 +275,7 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             duration: 2,
             ease: "power1.inOut",
             onStart: () => {
+              props.setStateAnimate(3);
               if (scrollingSound.current) {
                 scrollingSound.current.pause();
               }
@@ -366,6 +375,7 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
             repeat: 1,
             ease: "power1.inOut",
             onStart: () => {
+              props.setStateAnimate(4);
               if (keyboardSound.current) {
                 keyboardSound.current.currentTime = 0;
                 keyboardSound.current.play();
@@ -446,7 +456,15 @@ export default function Character({ setMouseMove, ...props }: CharacterProps): J
         // Scene 5
         .to(
           nodes.RightArm.rotation,
-          { x: 0, y: -0.7, z: -0.9, duration: 2 },
+          {
+            x: 0,
+            y: -0.7,
+            z: -0.9,
+            duration: 2,
+            onStart: () => {
+              props.setStateAnimate(5);
+            },
+          },
           ">+1"
         )
         .to(

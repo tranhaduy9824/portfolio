@@ -3,11 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 interface AirplaneFollowProps {
   mouseSelected: boolean;
   setMouseSelected: (value: boolean) => void;
+  isLampOn: boolean;
 }
 
 const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
   mouseSelected,
   setMouseSelected,
+  isLampOn,
 }) => {
   const [mousePos, setMousePos] = useState({
     x: window.innerWidth / 2,
@@ -88,7 +90,9 @@ const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
           const wave = wavesRef.current[i];
           ctx.beginPath();
           ctx.arc(wave.x, wave.y, wave.radius, 0, 2 * Math.PI);
-          ctx.strokeStyle = `rgba(36, 236, 255, ${wave.opacity})`;
+          ctx.strokeStyle = mouseSelected
+          ? `rgba(255, 29, 108, ${wave.opacity}))`
+          : `rgba(36, 236, 255, ${wave.opacity}))`;
           ctx.lineWidth = 2;
           ctx.stroke();
 
@@ -150,6 +154,7 @@ const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
             width: "140px",
             textAlign: "center",
             textShadow: "0 0 8px rgba(36, 236, 255, 0.8)",
+            color: `${isLampOn ? "white" : "black"}`,
           }}
         >
           Click to enable sounds 🔊

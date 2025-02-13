@@ -48,6 +48,8 @@ const Hero = ({
     [number, number, number]
   >([-3.5, 1.4, 7]);
 
+  const [stateAnimate, setStateAnimate] = useState(1);
+
   const currentConfig = isMobile
     ? responsive.mobile
     : isSmallTablet
@@ -126,6 +128,7 @@ const Hero = ({
                 rotation={[0.3, Math.PI - 0.3, 0]}
                 scale={1.3}
                 mouseMove={mouseMove}
+                stateAnimate={stateAnimate}
               />
               <Character
                 position={[-1.32, -0.6, 0.68]}
@@ -133,6 +136,7 @@ const Hero = ({
                 scale={1.15}
                 setMouseMove={setMouseMove}
                 sound={sound}
+                setStateAnimate={setStateAnimate}
               />
             </group>
           </HeroCamera>
