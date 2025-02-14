@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import Laptop from "./Laptop";
 import Screen from "./Screen";
+import About from "./About";
 
 function MyRoom(props: any) {
   const { nodes, materials } = useGLTF("/models/desk.glb") as any;
@@ -626,25 +627,8 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      {/* Home */}
-      <group
-        position={[1.973, 1.388, -0.9]}
-        rotation={[-3.14, -Math.PI / 2, -Math.PI]}
-        scale={0.56}
-      >
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes["C-E70647_(1)002"].geometry}
-          material={materials["*17"]}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes["C-E70647_(1)002_1"].geometry}
-          material={materials.Color_1}
-        />
-      </group>
+      {/* About */}
+      <About nodes={nodes} materials={materials} />
       <group
         position={[1.82, 1.477, -0.193]}
         rotation={[Math.PI, -Math.PI / 2, -Math.PI / 2]}

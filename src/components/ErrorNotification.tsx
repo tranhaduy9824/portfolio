@@ -2,10 +2,15 @@ import { useTexture } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useEffect } from "react";
 
-const ErrorNotification = ({ stateAnimate }: { stateAnimate: number }) => {
+const ErrorNotification = ({
+  stateAnimate,
+  sound,
+}: {
+  stateAnimate: number;
+  sound: boolean;
+}) => {
   const errorTxt = useTexture("textures/error-message.png");
   const errorSound = new Audio("sounds/error.mp3");
-  errorSound.volume = 0.2;
 
   const { opacity, scale } = useSpring({
     opacity: stateAnimate === 1 || stateAnimate === 5 ? 1 : 0,
@@ -14,11 +19,15 @@ const ErrorNotification = ({ stateAnimate }: { stateAnimate: number }) => {
   });
 
   useEffect(() => {
+    if (!errorSound) return;
+
+    errorSound.volume = sound ? 0.2 : 0;
+
     if (stateAnimate === 5) {
       errorSound.currentTime = 0;
       errorSound.play();
     }
-  }, [stateAnimate]);
+  }, [sound, stateAnimate]);
 
   return (
     <animated.mesh

@@ -93,7 +93,7 @@ const Hero = ({
             positionCamera={positionCamera}
           >
             <group position={[0, 0, 0]} scale={currentConfig.groupScale}>
-              <ErrorNotification stateAnimate={stateAnimate} />
+              <ErrorNotification stateAnimate={stateAnimate} sound={sound} />
               <Lamp
                 position={[-1.2, 2.5, 0.15]}
                 scale={[0.9, 0.5, 0.9]}
