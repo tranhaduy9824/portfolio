@@ -19,6 +19,7 @@ import * as THREE from "three";
 import ScrollContent from "../components/ScrollContent";
 import { responsive } from "../constants";
 import { Lamp } from "../components/Lamp";
+import ErrorNotification from "../components/ErrorNotification";
 
 interface HeroProps {
   sound: boolean;
@@ -92,6 +93,7 @@ const Hero = ({
             positionCamera={positionCamera}
           >
             <group position={[0, 0, 0]} scale={currentConfig.groupScale}>
+              <ErrorNotification stateAnimate={stateAnimate} />
               <Lamp
                 position={[-1.2, 2.5, 0.15]}
                 scale={[0.9, 0.5, 0.9]}
