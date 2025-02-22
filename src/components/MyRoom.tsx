@@ -24,7 +24,7 @@ function MyRoom(props: any) {
         mouseRef.current.position,
         {
           x: "-=0.09",
-          z: "-=0.01",  
+          z: "-=0.01",
           duration: 2,
           ease: "power1.inOut",
         },
@@ -53,14 +53,16 @@ function MyRoom(props: any) {
         geometry={nodes["G-Object035"].geometry}
         material={materials["*2"]}
         position={[0, 0.747, 0]}
+        scale={[1.177, 1, 1]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes["G-Object035"].geometry}
         material={materials["*2"]}
-        position={[2, 0.747, 0]}
+        position={[2, 0.747, -0.6]}
         rotation={[0, Math.PI / 2, 0]}
+        scale={[0.67, 1, 1]}
       />
       <mesh
         castShadow
@@ -197,7 +199,11 @@ function MyRoom(props: any) {
             />
           </group>
         </group>
-        <Screen nodes={nodes} materials={materials} stateAnimate={props.stateAnimate} />
+        <Screen
+          nodes={nodes}
+          materials={materials}
+          stateAnimate={props.stateAnimate}
+        />
         <group position={[-0.576, 0, -0.12]} ref={mouseRef}>
           <group position={[-0.001, 0, 0.002]}>
             <group position={[0.018, 0, -0.021]}>
@@ -766,7 +772,11 @@ function MyRoom(props: any) {
           />
         </group>
       </group>
-      <Laptop nodes={nodes} materials={materials} stateAnimate={props.stateAnimate} />
+      <Laptop
+        nodes={nodes}
+        materials={materials}
+        stateAnimate={props.stateAnimate}
+      />
       <group position={[-15.247, -0.33, -16.328]}>
         <group position={[0, 0.326, -8.461]}>
           <mesh
