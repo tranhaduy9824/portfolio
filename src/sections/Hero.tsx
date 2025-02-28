@@ -66,7 +66,14 @@ const Hero = ({
       <Canvas
         className="w-full h-screen top-0 left-0 bottom-0"
         style={{ position: "absolute" }}
-        gl={{ localClippingEnabled: true, stencil: true }}
+        gl={{
+          localClippingEnabled: true,
+          stencil: true,
+          powerPreference: "high-performance",
+          alpha: true,
+          antialias: true,
+        }}
+        dpr={[1, 2]}
       >
         <Suspense fallback={<CanvasLoader setIsLoaded={setIsLoaded} />}>
           {/* <OrbitControls /> */}

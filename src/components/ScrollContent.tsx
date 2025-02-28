@@ -4,6 +4,7 @@ import { useScroll } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { easing } from "maath";
+import { useAppStore } from "../store/useAppStore";
 
 interface ScrollContentProps {
   cameraRef: RefObject<THREE.Camera>;
@@ -16,6 +17,7 @@ const ScrollContent = ({
   setPointer,
   setPositionCamera,
 }: ScrollContentProps) => {
+  const { setShowNetwork } = useAppStore();
   const scroll = useScroll();
   const totalPages = 4;
   const maxScroll = totalPages - 1;
@@ -35,9 +37,10 @@ const ScrollContent = ({
         targetRotation.set(0, 0.1, 0);
         setPositionCamera([-3.5, 1.4, 7]);
         setPointer({ x: 30, y: 30 });
+        setShowNetwork(false);
         break;
       case 1:
-        targetPosition.set(-3., 2.8, 1.5);
+        targetPosition.set(-3, 2.8, 1.5);
         targetRotation.set(0.3, 1.3, 0);
         setPositionCamera([-3.5, 2.8, 1.5]);
         setPointer({ x: 300, y: 300 });
@@ -47,12 +50,14 @@ const ScrollContent = ({
         targetRotation.set(0, -0.1, 0);
         setPositionCamera([0, 1.4, 3]);
         setPointer({ x: 300, y: 300 });
+        setShowNetwork(false);
         break;
       case 3:
         targetPosition.set(0, 1.4, -40);
         targetRotation.set(0, -0.1, 0);
         setPositionCamera([0, 1.4, -40]);
         setPointer({ x: 300, y: 300 });
+        setShowNetwork(false);
         break;
       default:
         break;

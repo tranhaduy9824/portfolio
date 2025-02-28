@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { easing } from "maath";
 import { ReactNode } from "react";
 import * as THREE from "three";
+import { useAppStore } from "../store/useAppStore";
 
 interface HeroCameraProps {
   children: ReactNode;
@@ -11,20 +12,28 @@ interface HeroCameraProps {
   positionCamera: [number, number, number];
 }
 
-const HeroCamera = ({ children, isMobile, pointer, positionCamera }: HeroCameraProps) => {
+const HeroCamera = ({
+  children,
+  isMobile,
+  pointer,
+  positionCamera,
+}: HeroCameraProps) => {
   const groupRef = useRef<THREE.Group>(null);
+  const { showNetwork } = useAppStore();
 
   useFrame((state, delta) => {
     easing.damp3(state.camera.position, positionCamera, 1, delta);
+    if (!showNetwork) {      
 
-    if (!isMobile) {
-      if (groupRef.current) {
-        easing.dampE(
-          groupRef.current.rotation,
-          [-state.pointer.y / pointer.x, -state.pointer.x / pointer.y, 0],
-          0.5,
-          delta
-        );
+      if (!isMobile) {
+        if (groupRef.current) {
+          easing.dampE(
+            groupRef.current.rotation,
+            [-state.pointer.y / pointer.x, -state.pointer.x / pointer.y, 0],
+            0.5,
+            delta
+          );
+        }
       }
     }
   });
