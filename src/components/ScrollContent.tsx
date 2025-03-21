@@ -17,7 +17,8 @@ const ScrollContent = ({
   setPointer,
   setPositionCamera,
 }: ScrollContentProps) => {
-  const { setShowNetwork } = useAppStore();
+  const { setShowNetwork, setIsAnimationComplete, setAreIconsVisible } =
+    useAppStore();
   const scroll = useScroll();
   const totalPages = 4;
   const maxScroll = totalPages - 1;
@@ -33,31 +34,40 @@ const ScrollContent = ({
 
     switch (segment) {
       case 0:
+        setShowNetwork(false);
+        setIsAnimationComplete(true);
+        setAreIconsVisible(false);
         targetPosition.set(-3.5, 1.4, 7);
         targetRotation.set(0, 0.1, 0);
         setPositionCamera([-3.5, 1.4, 7]);
         setPointer({ x: 30, y: 30 });
-        setShowNetwork(false);
         break;
       case 1:
         targetPosition.set(-3, 2.8, 1.5);
         targetRotation.set(0.3, 1.3, 0);
         setPositionCamera([-3.5, 2.8, 1.5]);
         setPointer({ x: 300, y: 300 });
+        setTimeout(() => {
+          setAreIconsVisible(true);
+        }, 1000);
         break;
       case 2:
+        setShowNetwork(false);
+        setIsAnimationComplete(true);
+        setAreIconsVisible(false);
         targetPosition.set(0, 1.4, 3);
         targetRotation.set(0, -0.1, 0);
         setPositionCamera([0, 1.4, 3]);
         setPointer({ x: 300, y: 300 });
-        setShowNetwork(false);
         break;
       case 3:
+        setShowNetwork(false);
+        setIsAnimationComplete(true);
+        setAreIconsVisible(false);
         targetPosition.set(0, 1.4, -40);
         targetRotation.set(0, -0.1, 0);
         setPositionCamera([0, 1.4, -40]);
         setPointer({ x: 300, y: 300 });
-        setShowNetwork(false);
         break;
       default:
         break;

@@ -4,12 +4,20 @@ import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
+import { createSpiderNetwork } from "../utils";
 
 const SpiderNetwork = () => {
   const networkRef = useRef<THREE.Group>(null);
   const isDragging = useRef(false);
   const { camera } = useThree();
-  const { showNetwork } = useAppStore();
+  const {
+    showNetwork,
+    isAnimationComplete,
+    setIsAnimationComplete,
+    positionCamera,
+    setShowNetwork,
+    areIconsVisible
+  } = useAppStore();
 
   const reactGlb = useLoader(GLTFLoader, "/models/logos/react_logo.glb");
   const htmlGlb = useLoader(GLTFLoader, "/models/logos/html_logo.glb");
@@ -21,24 +29,25 @@ const SpiderNetwork = () => {
   const logoModels = [htmlGlb, jsGlb, vscodeGlb, tsGlb, threeGlb];
   const repeatedLogos = [...logoModels, ...logoModels];
 
-  const createSpiderNetwork = () => {
-    const points: THREE.Vector3[] = [];
-    const radius = 0.95;
-    const numPoints = 10;
+  useEffect(() => {
+    if (networkRef.current) {
+      networkRef.current.traverse((object) => {
+        if (
+          object instanceof THREE.Mesh &&
+          object.material instanceof THREE.Material
+        ) {
+          object.material.stencilWrite = !showNetwork && isAnimationComplete;
+          object.material.stencilRef =
+            !showNetwork && isAnimationComplete ? 1 : 0;
+            object.material.stencilFunc = areIconsVisible ? THREE.AlwaysStencilFunc : THREE.NeverStencilFunc;
 
-    for (let i = 0; i < numPoints; i++) {
-      const y = 1 - (i / (numPoints - 1)) * 2;
-      const theta = Math.acos(y);
-      const phi = Math.PI * (3 - Math.sqrt(5)) * i;
-
-      const x = radius * Math.sin(theta) * Math.cos(phi);
-      const z = radius * Math.sin(theta) * Math.sin(phi);
-
-      points.push(new THREE.Vector3(x, y * radius, z));
+          object.material.stencilFail = THREE.KeepStencilOp;
+          object.material.stencilZFail = THREE.KeepStencilOp;
+          object.material.stencilZPass = THREE.KeepStencilOp;
+        }
+      });
     }
-
-    return points;
-  };
+  }, [showNetwork, isAnimationComplete, positionCamera, areIconsVisible]);
 
   const [rotation, setRotation] = useState([0, 0, 0]);
   const rotationVelocity = useRef([0, 0, 0]);
@@ -96,29 +105,54 @@ const SpiderNetwork = () => {
   });
 
   const { position, scale } = useSpring({
-    position: showNetwork ? [1.3, -0.4, 5] : [2.39, 0, 0],
-    scale: showNetwork ? [1, 1, 1] : [0.4, 0.4, 0.4],
+    position: showNetwork ? [1.3, -0.4, 5] : [2.27, -0.06, 1],
+    scale: showNetwork ? [1, 1, 1] : [0.35, 0.35, 0.35],
     config: { tension: 100, friction: 20 },
     onStart: () => {
       rotationVelocity.current = [0, Math.PI * 2, 0];
+      setIsAnimationComplete(false);
     },
     onRest: () => {
       rotationVelocity.current = [0, 0, 0];
+      setIsAnimationComplete(true);
     },
   });
 
   return (
     <>
+      {!showNetwork && isAnimationComplete && (
+        <mesh position={[2.27, -0.06, 1]} renderOrder={0}>
+          <planeGeometry args={[2, 2]} />
+          <meshBasicMaterial
+            color="black"
+            transparent
+            opacity={0}
+            stencilWrite={true}
+            stencilRef={1}
+            stencilFunc={THREE.AlwaysStencilFunc}
+            stencilZPass={THREE.ReplaceStencilOp}
+          />
+        </mesh>
+      )}
+
       {showNetwork && (
-        <mesh position={[1, 0, 3.8]}>
+        <mesh position={[1, 0, 3.8]} 
+        onClick={() => setShowNetwork(false)}
+        >
           <planeGeometry args={[15, 13]} />
-          <meshBasicMaterial color={"black"} transparent opacity={0.5} />
+          <meshBasicMaterial
+            color={"black"}
+            transparent
+            opacity={0.5}
+            depthTest={false}
+          />
         </mesh>
       )}
       <animated.group
         ref={networkRef}
         position={position as unknown as [number, number, number]}
         scale={scale as unknown as [number, number, number]}
+        renderOrder={1}
       >
         <group position={[0, 0, 0]} ref={(el) => (logoRefs.current[0] = el!)}>
           <mesh>
@@ -151,7 +185,12 @@ const SpiderNetwork = () => {
                   color={"white"}
                   transparent
                   opacity={0.6}
-                  depthTest={false}
+                  stencilWrite={!showNetwork && isAnimationComplete}
+                  stencilRef={!showNetwork && isAnimationComplete ? 1 : 0}
+                  stencilFunc={THREE.EqualStencilFunc}
+                  stencilFail={THREE.KeepStencilOp}
+                  stencilZFail={THREE.KeepStencilOp}
+                  stencilZPass={THREE.KeepStencilOp}
                 />
               </mesh>
             </group>
@@ -167,7 +206,15 @@ const SpiderNetwork = () => {
                 itemSize={3}
               />
             </bufferGeometry>
-            <lineBasicMaterial attach="material" color={"#111"} linewidth={3} />
+            <meshBasicMaterial
+              color={"#111"}
+              stencilWrite={!showNetwork && isAnimationComplete}
+              stencilRef={!showNetwork && isAnimationComplete ? 1 : 0}
+              stencilFunc={THREE.EqualStencilFunc}
+              stencilFail={THREE.KeepStencilOp}
+              stencilZFail={THREE.KeepStencilOp}
+              stencilZPass={THREE.KeepStencilOp}
+            />
           </line>
         ))}
       </animated.group>

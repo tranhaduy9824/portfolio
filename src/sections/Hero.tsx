@@ -20,6 +20,7 @@ import ScrollContent from "../components/ScrollContent";
 import { responsive } from "../constants";
 import { Lamp } from "../components/Lamp";
 import ErrorNotification from "../components/ErrorNotification";
+import { useAppStore } from "../store/useAppStore";
 
 interface HeroProps {
   sound: boolean;
@@ -45,9 +46,7 @@ const Hero = ({
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
 
   const [pointer, setPointer] = useState({ x: 30, y: 30 });
-  const [positionCamera, setPositionCamera] = useState<
-    [number, number, number]
-  >([-3.5, 1.4, 7]);
+  const {positionCamera, setPositionCamera} = useAppStore()
 
   const [stateAnimate, setStateAnimate] = useState(1);
 
