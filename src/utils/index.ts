@@ -84,10 +84,11 @@ export const createSpiderNetwork = () => {
 
 export const glowMaterial = new THREE.ShaderMaterial({
   uniforms: {
-    glowColor: { value: new THREE.Color("#00aaff") },
-    intensity: { value: 1.2 },
+    glowColor: { value: new THREE.Color("#00ccff") },
+    intensity: { value: 1.5 },
     viewVector: { value: new THREE.Vector3() },
-    glowWidth: { value: 0.25 },
+    glowWidth: { value: 0.85 },
+    time: { value: 0.0 },
   },
   vertexShader: `
     varying vec3 vNormal;
@@ -103,6 +104,7 @@ export const glowMaterial = new THREE.ShaderMaterial({
     uniform float intensity;
     uniform vec3 viewVector;
     uniform float glowWidth;
+    uniform float time;
     varying vec3 vNormal;
     varying vec3 vPosition;
 
@@ -110,17 +112,32 @@ export const glowMaterial = new THREE.ShaderMaterial({
       float viewAngle = dot(normalize(vNormal), normalize(viewVector));
       float edge = 1.0 - abs(viewAngle);
       float glow = smoothstep(1.0 - glowWidth, 1.0, edge) * intensity;
-      gl_FragColor = vec4(glowColor, glow * 0.8);
+      glow *= (0.8 + 0.2 * sin(time * 2.0));
+      gl_FragColor = vec4(glowColor, glow * 0.7); // Màu độc lập, không bị ánh sáng môi trường
     }
   `,
   side: THREE.BackSide,
   blending: THREE.AdditiveBlending,
   transparent: true,
+  depthWrite: false,
 });
 
 export const normalMaterial = new THREE.MeshBasicMaterial({
-  color: "#00aaff",
+  color: "#006688",
   transparent: true,
-  opacity: 0.18,
+  opacity: 0.1,
   side: THREE.BackSide,
+  depthWrite: false,
+});
+
+export const glowLineMaterial = new THREE.LineBasicMaterial({
+  color: "#00ccff",
+  transparent: true,
+  opacity: 0.8,
+});
+
+export const normalLineMaterial = new THREE.LineBasicMaterial({
+  color: "#006688",
+  transparent: true,
+  opacity: 0.2,
 });

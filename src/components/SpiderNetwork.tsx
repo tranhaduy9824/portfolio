@@ -1,10 +1,16 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useRef, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
-import { createSpiderNetwork, glowMaterial, normalMaterial } from "../utils";
+import {
+  createSpiderNetwork,
+  glowLineMaterial,
+  glowMaterial,
+  normalLineMaterial,
+} from "../utils";
 import { logoModels } from "../constants";
 
 const SpiderNetwork = () => {
@@ -17,7 +23,6 @@ const SpiderNetwork = () => {
     isAnimationComplete,
     setIsAnimationComplete,
     positionCamera,
-    setShowNetwork,
   } = useAppStore();
 
   const models = useLoader(
@@ -40,10 +45,36 @@ const SpiderNetwork = () => {
           object.material.stencilFail = THREE.KeepStencilOp;
           object.material.stencilZFail = THREE.KeepStencilOp;
           object.material.stencilZPass = THREE.KeepStencilOp;
+          if (
+            object.material instanceof THREE.MeshStandardMaterial ||
+            object.material instanceof THREE.MeshPhysicalMaterial
+          ) {
+            object.material.envMap = null;
+            object.material.envMapIntensity = 0;
+          }
+          object.material.needsUpdate = true;
         }
       });
+
+      models.forEach((model) => {
+        model.scene.traverse((child) => {
+          if (
+            child instanceof THREE.Mesh &&
+            child.material instanceof THREE.Material
+          ) {
+            if (
+              child.material instanceof THREE.MeshStandardMaterial ||
+              child.material instanceof THREE.MeshPhysicalMaterial
+            ) {
+              child.material.envMap = null;
+              child.material.envMapIntensity = 0;
+            }
+            child.material.needsUpdate = true;
+          }
+        });
+      });
     }
-  }, [showNetwork, isAnimationComplete, positionCamera]);
+  }, [showNetwork, isAnimationComplete, positionCamera, models]);
 
   const [rotation, setRotation] = useState([0, 0, 0]);
   const rotationVelocity = useRef([0, 0, 0]);
@@ -98,6 +129,8 @@ const SpiderNetwork = () => {
         logo.lookAt(camera.position);
       }
     });
+
+    glowMaterial.uniforms.time.value += 0.016;
   });
 
   const { position, scale } = useSpring({
@@ -127,12 +160,14 @@ const SpiderNetwork = () => {
   return (
     <>
       <ambientLight intensity={0.3} />
-      <pointLight
-        position={[2, 1, 5]}
-        intensity={1}
-        distance={10}
-        color="#00aaff"
-      />
+      {showNetwork && (
+        <pointLight
+          position={[2, 1, 5]}
+          intensity={0.5}
+          distance={10}
+          color="#00aaff"
+        />
+      )}
 
       {!showNetwork && isAnimationComplete && (
         <mesh position={[2.27, -0.06, 1]} renderOrder={0}>
@@ -171,6 +206,12 @@ const SpiderNetwork = () => {
           const offsetPoint = point.clone().multiplyScalar(1.1);
           const isSelected = selectedLogos.includes(index);
 
+          const { color: sphereColor, opacity: sphereOpacity } = useSpring({
+            color: isSelected ? "#00ccff" : "#006688",
+            opacity: isSelected ? 0.7 : 0.1,
+            config: { tension: 200, friction: 20 },
+          });
+
           return (
             <group
               key={index}
@@ -184,37 +225,72 @@ const SpiderNetwork = () => {
                   rotation={[0, 0, 0.3]}
                   position={logoModels[index + 1].position}
                 />
-                <mesh
-                  material={isSelected ? glowMaterial : normalMaterial}
-                  scale={0.4}
-                >
+                <mesh scale={0.4}>
                   <sphereGeometry args={[0.3, 16, 16]} />
+                  <animated.meshBasicMaterial
+                    color={sphereColor}
+                    transparent
+                    opacity={sphereOpacity}
+                    side={THREE.BackSide}
+                    depthWrite={false}
+                  />
                 </mesh>
               </mesh>
             </group>
           );
         })}
-        {createSpiderNetwork().map((point, index) => (
-          <line key={index}>
-            <bufferGeometry attach="geometry">
-              <bufferAttribute
-                attach="attributes-position"
-                count={2}
-                array={new Float32Array([0, 0, 0, point.x, point.y, point.z])}
-                itemSize={3}
+        {createSpiderNetwork().map((point, index) => {
+          const isSelected = selectedLogos.includes(index);
+          const centerSphereRadius = 1.3 * 0.12; // Bán kính sphere trung tâm
+          const iconSphereRadius = 0.3 * 0.4; // Bán kính sphere icon
+          const start = new THREE.Vector3(0, 0, 0);
+          const end = new THREE.Vector3(
+            point.x,
+            point.y,
+            point.z
+          ).multiplyScalar(1.1);
+          const direction = end.clone().sub(start).normalize();
+          const startAdjusted = start
+            .clone()
+            .add(direction.clone().multiplyScalar(centerSphereRadius));
+          const endAdjusted = end
+            .clone()
+            .sub(direction.clone().multiplyScalar(iconSphereRadius));
+          const distance = startAdjusted.distanceTo(endAdjusted);
+          const cylinderRadius = isSelected ? 0.008 : 0.004;
+
+          const { color: lineColor, opacity: lineOpacity } = useSpring({
+            color: isSelected ? "#00ccff" : "#333333",
+            opacity: isSelected ? 0.8 : 0.2,
+            config: { tension: 200, friction: 20 },
+          });
+
+          return (
+            <mesh
+              key={index}
+              position={startAdjusted.clone().lerp(endAdjusted, 0.5)}
+              quaternion={new THREE.Quaternion().setFromUnitVectors(
+                new THREE.Vector3(0, 1, 0),
+                direction
+              )}
+            >
+              <cylinderGeometry
+                args={[cylinderRadius, cylinderRadius, distance, 16]}
               />
-            </bufferGeometry>
-            <meshBasicMaterial
-              color={"#111"}
-              stencilWrite={!showNetwork && isAnimationComplete}
-              stencilRef={!showNetwork && isAnimationComplete ? 1 : 0}
-              stencilFunc={THREE.EqualStencilFunc}
-              stencilFail={THREE.KeepStencilOp}
-              stencilZFail={THREE.KeepStencilOp}
-              stencilZPass={THREE.KeepStencilOp}
-            />
-          </line>
-        ))}
+              <animated.meshBasicMaterial
+                color={lineColor}
+                transparent
+                opacity={lineOpacity}
+                stencilWrite={!showNetwork && isAnimationComplete}
+                stencilRef={!showNetwork && isAnimationComplete ? 1 : 0}
+                stencilFunc={THREE.EqualStencilFunc}
+                stencilFail={THREE.KeepStencilOp}
+                stencilZFail={THREE.KeepStencilOp}
+                stencilZPass={THREE.KeepStencilOp}
+              />
+            </mesh>
+          );
+        })}
       </animated.group>
     </>
   );
