@@ -7,9 +7,7 @@ import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
 import {
   createSpiderNetwork,
-  glowLineMaterial,
   glowMaterial,
-  normalLineMaterial,
 } from "../utils";
 import { logoModels } from "../constants";
 
