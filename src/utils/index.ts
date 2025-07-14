@@ -64,20 +64,63 @@ export const BorderMaterial = shaderMaterial(
 extend({ BorderMaterial });
 
 export const createSpiderNetwork = () => {
-    const points: THREE.Vector3[] = [];
-    const radius = 0.95;
-    const numPoints = 10;
+  const points: THREE.Vector3[] = [];
+  const radius = 0.95;
+  const numPoints = 15;
 
-    for (let i = 0; i < numPoints; i++) {
-      const y = 1 - (i / (numPoints - 1)) * 2;
-      const theta = Math.acos(y);
-      const phi = Math.PI * (3 - Math.sqrt(5)) * i;
+  for (let i = 0; i < numPoints; i++) {
+    const y = 1 - (i / (numPoints - 1)) * 2;
+    const theta = Math.acos(y);
+    const phi = Math.PI * (3 - Math.sqrt(5)) * i;
 
-      const x = radius * Math.sin(theta) * Math.cos(phi);
-      const z = radius * Math.sin(theta) * Math.sin(phi);
+    const x = radius * Math.sin(theta) * Math.cos(phi);
+    const z = radius * Math.sin(theta) * Math.sin(phi);
 
-      points.push(new THREE.Vector3(x, y * radius, z));
+    points.push(new THREE.Vector3(x, y * radius, z));
+  }
+
+  return points;
+};
+
+export const glowMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    glowColor: { value: new THREE.Color("#00aaff") },
+    intensity: { value: 1.2 },
+    viewVector: { value: new THREE.Vector3() },
+    glowWidth: { value: 0.25 },
+  },
+  vertexShader: `
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+      vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
+  `,
+  fragmentShader: `
+    uniform vec3 glowColor;
+    uniform float intensity;
+    uniform vec3 viewVector;
+    uniform float glowWidth;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
 
-    return points;
-  };
+    void main() {
+      float viewAngle = dot(normalize(vNormal), normalize(viewVector));
+      float edge = 1.0 - abs(viewAngle);
+      float glow = smoothstep(1.0 - glowWidth, 1.0, edge) * intensity;
+      gl_FragColor = vec4(glowColor, glow * 0.8);
+    }
+  `,
+  side: THREE.BackSide,
+  blending: THREE.AdditiveBlending,
+  transparent: true,
+});
+
+export const normalMaterial = new THREE.MeshBasicMaterial({
+  color: "#00aaff",
+  transparent: true,
+  opacity: 0.18,
+  side: THREE.BackSide,
+});
