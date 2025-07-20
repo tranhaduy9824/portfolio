@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useState, useRef } from "react";
 import {
-  OrbitControls,
   PerspectiveCamera,
   ScrollControls,
 } from "@react-three/drei";

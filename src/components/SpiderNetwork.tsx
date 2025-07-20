@@ -5,10 +5,7 @@ import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
-import {
-  createSpiderNetwork,
-  glowMaterial,
-} from "../utils";
+import { createSpiderNetwork, glowMaterial } from "../utils";
 import { logoModels } from "../constants";
 
 const SpiderNetwork = () => {
@@ -223,16 +220,29 @@ const SpiderNetwork = () => {
                   rotation={[0, 0, 0.3]}
                   position={logoModels[index + 1].position}
                 />
-                <mesh scale={0.4}>
-                  <sphereGeometry args={[0.3, 16, 16]} />
-                  <animated.meshBasicMaterial
-                    color={sphereColor}
-                    transparent
-                    opacity={sphereOpacity}
-                    side={THREE.BackSide}
-                    depthWrite={false}
-                  />
-                </mesh>
+                {isSelected ? (
+                  <mesh material={glowMaterial} scale={0.4}>
+                    <sphereGeometry args={[0.3, 16, 16]} />
+                    <animated.meshBasicMaterial
+                      color={sphereColor}
+                      transparent
+                      opacity={sphereOpacity}
+                      side={THREE.BackSide}
+                      depthWrite={false}
+                    />
+                  </mesh>
+                ) : (
+                  <mesh scale={0.4}>
+                    <sphereGeometry args={[0.3, 16, 16]} />
+                    <animated.meshBasicMaterial
+                      color={sphereColor}
+                      transparent
+                      opacity={sphereOpacity}
+                      side={THREE.BackSide}
+                      depthWrite={false}
+                    />
+                  </mesh>
+                )}
               </mesh>
             </group>
           );
@@ -258,7 +268,7 @@ const SpiderNetwork = () => {
           const cylinderRadius = isSelected ? 0.008 : 0.004;
 
           const { color: lineColor, opacity: lineOpacity } = useSpring({
-            color: isSelected ? "#00ccff" : "#333333",
+            color: isSelected ? "#00ccff" : "#006688",
             opacity: isSelected ? 0.8 : 0.2,
             config: { tension: 200, friction: 20 },
           });
