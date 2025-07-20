@@ -87,7 +87,7 @@ export const glowMaterial = new THREE.ShaderMaterial({
     glowColor: { value: new THREE.Color("#00ccff") },
     intensity: { value: 1.5 },
     viewVector: { value: new THREE.Vector3() },
-    glowWidth: { value: 0.85 },
+    glowWidth: { value: 1 },
     time: { value: 0.0 },
   },
   vertexShader: `
@@ -128,16 +128,4 @@ export const normalMaterial = new THREE.MeshBasicMaterial({
   opacity: 0.1,
   side: THREE.BackSide,
   depthWrite: false,
-});
-
-export const glowLineMaterial = new THREE.LineBasicMaterial({
-  color: "#00ccff",
-  transparent: true,
-  opacity: 0.8,
-});
-
-export const normalLineMaterial = new THREE.LineBasicMaterial({
-  color: "#006688",
-  transparent: true,
-  opacity: 0.2,
 });

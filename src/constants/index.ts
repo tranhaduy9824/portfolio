@@ -91,7 +91,7 @@ export const logoModels = [
   { model: "/models/logos/typescript.glb", scale: 1 },
   { model: "/models/logos/react.glb", scale: 1 },
   { model: "/models/logos/threejs.glb", scale: 0.0013 },
-  { model: "/models/logos/github.glb", scale: 0.1 },
+  { model: "/models/logos/github.glb", scale: 0.08 },
   { model: "/models/logos/java.glb", scale: 1 },
   { model: "/models/logos/mongodb.glb", scale: 1 },
   { model: "/models/logos/kotlin.glb", scale: 1 },
@@ -99,8 +99,8 @@ export const logoModels = [
   { model: "/models/logos/nestjs.glb", scale: 1 },
   { model: "/models/logos/nodejs.glb", scale: 1 },
   { model: "/models/logos/php.glb", scale: 1 },
-  { model: "/models/logos/python.glb", scale: 0.1 },
-  { model: "/models/logos/css.glb", scale: 0.001, position: [0.065, -0.19, 0] },
+  { model: "/models/logos/python.glb", scale: 0.08 },
+  { model: "/models/logos/css.glb", scale: 0.00095, position: [0.065, -0.19, 0] },
 ];
 
 export const listProject = [

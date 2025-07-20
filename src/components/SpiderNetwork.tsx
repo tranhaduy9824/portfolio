@@ -5,7 +5,7 @@ import { useLoader, useFrame, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
-import { createSpiderNetwork, glowMaterial } from "../utils";
+import { createSpiderNetwork, glowMaterial, normalMaterial } from "../utils";
 import { logoModels } from "../constants";
 
 const SpiderNetwork = () => {
@@ -164,8 +164,9 @@ const SpiderNetwork = () => {
         />
       )}
 
-      {!showNetwork && isAnimationComplete && (
-        <mesh position={[2.27, -0.06, 1]} renderOrder={0}>
+      {/* {!showNetwork && isAnimationComplete && (
+        // <mesh position={[2.27, -0.06, 1]} renderOrder={0}>
+        <mesh position={[2.39, 0, 0.0]} renderOrder={0}>
           <planeGeometry args={[2, 2]} />
           <meshBasicMaterial
             color="black"
@@ -177,7 +178,7 @@ const SpiderNetwork = () => {
             stencilZPass={THREE.ReplaceStencilOp}
           />
         </mesh>
-      )}
+      )} */}
 
       <animated.group
         ref={networkRef}
@@ -201,12 +202,6 @@ const SpiderNetwork = () => {
           const offsetPoint = point.clone().multiplyScalar(1.1);
           const isSelected = selectedLogos.includes(index);
 
-          const { color: sphereColor, opacity: sphereOpacity } = useSpring({
-            color: isSelected ? "#00ccff" : "#006688",
-            opacity: isSelected ? 0.7 : 0.1,
-            config: { tension: 200, friction: 20 },
-          });
-
           return (
             <group
               key={index}
@@ -223,24 +218,10 @@ const SpiderNetwork = () => {
                 {isSelected ? (
                   <mesh material={glowMaterial} scale={0.4}>
                     <sphereGeometry args={[0.3, 16, 16]} />
-                    <animated.meshBasicMaterial
-                      color={sphereColor}
-                      transparent
-                      opacity={sphereOpacity}
-                      side={THREE.BackSide}
-                      depthWrite={false}
-                    />
                   </mesh>
                 ) : (
-                  <mesh scale={0.4}>
+                  <mesh material={normalMaterial} scale={0.4}>
                     <sphereGeometry args={[0.3, 16, 16]} />
-                    <animated.meshBasicMaterial
-                      color={sphereColor}
-                      transparent
-                      opacity={sphereOpacity}
-                      side={THREE.BackSide}
-                      depthWrite={false}
-                    />
                   </mesh>
                 )}
               </mesh>
