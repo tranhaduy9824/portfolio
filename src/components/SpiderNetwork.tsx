@@ -32,11 +32,9 @@ const SpiderNetwork = () => {
           object instanceof THREE.Mesh &&
           object.material instanceof THREE.Material
         ) {
-          object.material.stencilWrite = !showNetwork && isAnimationComplete;
-          object.material.stencilRef =
-            !showNetwork && isAnimationComplete ? 1 : 0;
-          object.material.stencilFunc = THREE.AlwaysStencilFunc;
-
+          object.material.stencilWrite = !showNetwork && isAnimationComplete && ![-3.5, 2.8, 1.5].every(v => positionCamera.includes(v));
+          object.material.stencilRef = object.material.stencilWrite ? 1 : 0;
+          object.material.stencilFunc = THREE.EqualStencilFunc;
           object.material.stencilFail = THREE.KeepStencilOp;
           object.material.stencilZFail = THREE.KeepStencilOp;
           object.material.stencilZPass = THREE.KeepStencilOp;
@@ -57,6 +55,12 @@ const SpiderNetwork = () => {
             child instanceof THREE.Mesh &&
             child.material instanceof THREE.Material
           ) {
+            child.material.stencilWrite = !showNetwork && isAnimationComplete && ![-3.5, 2.8, 1.5].every(v => positionCamera.includes(v));
+            child.material.stencilRef = child.material.stencilWrite ? 1 : 0;
+            child.material.stencilFunc = THREE.EqualStencilFunc;
+            child.material.stencilFail = THREE.KeepStencilOp;
+            child.material.stencilZFail = THREE.KeepStencilOp;
+            child.material.stencilZPass = THREE.KeepStencilOp;
             if (
               child.material instanceof THREE.MeshStandardMaterial ||
               child.material instanceof THREE.MeshPhysicalMaterial
@@ -165,9 +169,8 @@ const SpiderNetwork = () => {
       )}
 
       {/* {!showNetwork && isAnimationComplete && (
-        // <mesh position={[2.27, -0.06, 1]} renderOrder={0}>
         <mesh position={[2.39, 0, 0.0]} renderOrder={0}>
-          <planeGeometry args={[2, 2]} />
+          <circleGeometry args={[0.5, 64]} />
           <meshBasicMaterial
             color="black"
             transparent
@@ -176,6 +179,7 @@ const SpiderNetwork = () => {
             stencilRef={1}
             stencilFunc={THREE.AlwaysStencilFunc}
             stencilZPass={THREE.ReplaceStencilOp}
+            depthWrite={false}
           />
         </mesh>
       )} */}
