@@ -4,6 +4,7 @@ import AirplaneFollow from "./components/AirplaneFollow";
 import "@fortawesome/fontawesome-free/css/all.css";
 import SuggestScroll from "./components/SuggestScroll";
 import { useAppStore } from "./store/useAppStore";
+import ProjectList from "./components/ProjectList";
 
 function App() {
   const { isLampOn, isLoaded } = useAppStore();
@@ -20,6 +21,7 @@ function App() {
           <>
             <AirplaneFollow />
             <SuggestScroll />
+            <ProjectList />
           </>
         )}
       </div>

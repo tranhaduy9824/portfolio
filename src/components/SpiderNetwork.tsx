@@ -6,14 +6,9 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useAppStore } from "../store/useAppStore";
 import { useSpring, animated } from "@react-spring/three";
 import { createSpiderNetwork, glowMaterial, normalMaterial } from "../utils";
-import { logoModels } from "../constants";
+import { logoModels, projects } from "../constants";
 
-interface SpiderNetworkProps {
-  selectedLogos?: number[];
-  onLogoSelect?: (index: number) => void;
-}
-
-const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: SpiderNetworkProps = {}) => {
+const SpiderNetwork = () => {
   const networkRef = useRef<THREE.Group>(null);
   const isDragging = useRef(false);
   const { camera } = useThree();
@@ -22,8 +17,8 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
     isAnimationComplete,
     setIsAnimationComplete,
     positionCamera,
+    selectedProject,
   } = useAppStore();
-  const [internalSelected, setInternalSelected] = useState<number[]>([]);
 
   const models = useLoader(
     GLTFLoader,
@@ -37,7 +32,10 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
           object instanceof THREE.Mesh &&
           object.material instanceof THREE.Material
         ) {
-          object.material.stencilWrite = !showNetwork && isAnimationComplete && ![-3.5, 2.8, 1.5].every(v => positionCamera.includes(v));
+          object.material.stencilWrite =
+            !showNetwork &&
+            isAnimationComplete &&
+            ![-3.5, 2.8, 1.5].every((v) => positionCamera.includes(v));
           object.material.stencilRef = object.material.stencilWrite ? 1 : 0;
           object.material.stencilFunc = THREE.EqualStencilFunc;
           object.material.stencilFail = THREE.KeepStencilOp;
@@ -60,7 +58,10 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
             child instanceof THREE.Mesh &&
             child.material instanceof THREE.Material
           ) {
-            child.material.stencilWrite = !showNetwork && isAnimationComplete && ![-3.5, 2.8, 1.5].every(v => positionCamera.includes(v));
+            child.material.stencilWrite =
+              !showNetwork &&
+              isAnimationComplete &&
+              ![-3.5, 2.8, 1.5].every((v) => positionCamera.includes(v));
             child.material.stencilRef = child.material.stencilWrite ? 1 : 0;
             child.material.stencilFunc = THREE.EqualStencilFunc;
             child.material.stencilFail = THREE.KeepStencilOp;
@@ -151,22 +152,10 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
     },
   });
 
-  const selectedLogos = externalSelected || internalSelected;
-
-  const handleLogoClick = (index: number) => {
-    if (onLogoSelect) {
-      onLogoSelect(index);
-    } else {
-      setInternalSelected((prev) =>
-        prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-      );
-    }
-  };
-
   useFrame(({ camera }) => {
     glowMaterial.uniforms.viewVector.value = camera.position;
   });
-  
+
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -199,7 +188,9 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
         </group>
         {createSpiderNetwork().map((point, index) => {
           const offsetPoint = point.clone().multiplyScalar(1.1);
-          const isSelected = selectedLogos.includes(index);
+          const isSelected =
+            selectedProject !== null &&
+            projects[selectedProject]?.techStack.includes(index);
 
           return (
             <group
@@ -207,7 +198,7 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
               position={[offsetPoint.x, offsetPoint.y, offsetPoint.z]}
               ref={(el) => (logoRefs.current[index + 1] = el!)}
             >
-              <mesh onClick={() => handleLogoClick(index)}>
+              <mesh>
                 <primitive
                   object={models[index + 1].scene}
                   scale={logoModels[index + 1].scale}
@@ -228,7 +219,9 @@ const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: Spider
           );
         })}
         {createSpiderNetwork().map((point, index) => {
-          const isSelected = selectedLogos.includes(index);
+          const isSelected =
+            selectedProject !== null &&
+            projects[selectedProject]?.techStack.includes(index);
           const centerSphereRadius = 1.3 * 0.12; // Bán kính sphere trung tâm
           const iconSphereRadius = 0.3 * 0.4; // Bán kính sphere icon
           const start = new THREE.Vector3(0, 0, 0);

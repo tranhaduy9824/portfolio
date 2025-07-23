@@ -167,3 +167,24 @@ export const projects = [
     image: "/project4.jpg"
   }
 ];
+
+interface TechIcon {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+export const techIcons: { [key: number]: TechIcon } = {
+  0: { name: "React", icon: "⚛️", color: "#61DAFB" },
+  1: { name: "TypeScript", icon: "🔷", color: "#3178C6" },
+  2: { name: "Node.js", icon: "🟢", color: "#339933" },
+  3: { name: "Python", icon: "🐍", color: "#3776AB" },
+  4: { name: "MongoDB", icon: "🍃", color: "#47A248" },
+  5: { name: "PostgreSQL", icon: "🐘", color: "#336791" },
+  6: { name: "AWS", icon: "☁️", color: "#FF9900" },
+  7: { name: "Docker", icon: "🐳", color: "#2496ED" },
+  8: { name: "Next.js", icon: "▲", color: "#000000" },
+  9: { name: "Vue.js", icon: "💚", color: "#4FC08D" },
+  10: { name: "Express", icon: "🚂", color: "#000000" },
+  11: { name: "GraphQL", icon: "🔺", color: "#E10098" },
+};

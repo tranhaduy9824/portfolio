@@ -165,3 +165,104 @@ main {
     transform: translateY(4px);
   }
 }
+
+/* Project */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px currentColor; 
+  }
+  50% { 
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; 
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-10px) rotate(5deg); 
+  }
+}
+
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.light-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.light-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+.light-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.tech-indicator {
+  transition: all 0.3s ease;
+}
+
+.tech-indicator:hover {
+  transform: scale(1.2) translateY(-2px);
+  animation: glow 1.5s ease-in-out infinite;
+}
+
+.project-list-enter {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 1.5s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 4s linear infinite;
+}

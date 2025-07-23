@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 import Avatar from "./Avatar";
 import CircularMask from "./CircularMask";
 import { Text } from "@react-three/drei";
@@ -8,19 +8,11 @@ import * as THREE from "three";
 import SpiderNetwork from "./SpiderNetwork";
 import { useAppStore } from "../store/useAppStore";
 import { BorderMaterial, createGradientTexture } from "../utils";
-import ProjectList from "./ProjectList";
 
 const About = ({ nodes, materials }: any) => {
   const { showNetwork, setShowNetwork } = useAppStore();
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [selectedTechStack, setSelectedTechStack] = useState<number[]>([]);
 
   const borderRef = useRef<any>();
-
-  const handleProjectSelect = (techStack: number[]) => {
-    setSelectedTechStack(techStack);
-    setSelectedProject((prev) => (prev === null ? 1 : prev));
-  };
 
   const gradientTexture11 = useMemo(
     () => createGradientTexture("rgb(255, 241, 235)", "rgb(172, 224, 249)"),
@@ -116,10 +108,7 @@ const About = ({ nodes, materials }: any) => {
           </group>
         </group>
         <group position={[-0.6, 0, 0]} scale={0.5}>
-          <SpiderNetwork
-            selectedLogos={selectedTechStack}
-            onLogoSelect={() => {}}
-          />
+          <SpiderNetwork />
           <CircularMask position={[2.39, 0, 0]} />
           <mesh
             castShadow
@@ -160,11 +149,6 @@ const About = ({ nodes, materials }: any) => {
             </Text>
           </group>
         </group>
-        <ProjectList
-          showNetwork={showNetwork}
-          onProjectSelect={handleProjectSelect}
-          selectedProject={selectedProject}
-        />
         <group position={[-0.6, -0.6, 0]} scale={0.5}>
           <mesh castShadow receiveShadow position={[0, 0, 0.0]}>
             <circleGeometry args={[0.5, 64]} />
