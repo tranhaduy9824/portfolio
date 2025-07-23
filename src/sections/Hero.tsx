@@ -21,21 +21,8 @@ import { Lamp } from "../components/Lamp";
 import ErrorNotification from "../components/ErrorNotification";
 import { useAppStore } from "../store/useAppStore";
 
-interface HeroProps {
-  sound: boolean;
-  setMouseSelected: (value: boolean) => void;
-  setIsLoaded: (value: boolean) => void;
-  isLampOn: boolean;
-  toggleLamp: () => void;
-}
-
-const Hero = ({
-  sound,
-  setMouseSelected,
-  setIsLoaded,
-  isLampOn,
-  toggleLamp,
-}: HeroProps) => {
+const Hero = () => {
+  const { sound, setMouseSelected, setIsLoaded, isLampOn, toggleLamp } = useAppStore();
   const [mouseMove, setMouseMove] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const isSmallTablet = useMediaQuery({ maxWidth: 1024 });

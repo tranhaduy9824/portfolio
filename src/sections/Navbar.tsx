@@ -9,12 +9,7 @@ import {
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
-
-interface NavbarProps {
-  sound: boolean;
-  setSound: () => void;
-  isLampOn: boolean;
-}
+import { useAppStore } from "../store/useAppStore";
 
 const NavItems = ({ isLampOn }: { isLampOn: boolean }) => (
   <ul className="nav-ul">
@@ -30,13 +25,14 @@ const NavItems = ({ isLampOn }: { isLampOn: boolean }) => (
   </ul>
 );
 
-const Navbar = ({ sound, setSound, isLampOn }: NavbarProps) => {
+const Navbar = () => {
+  const { sound, setSound, isLampOn } = useAppStore();
   const [isVolume, setIsVolume] = useState(sound);
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
 
   const toggleVolume = () => {
-    setSound();
+    setSound(!sound);
     setIsVolume(!isVolume);
   };
 
@@ -71,24 +67,21 @@ const Navbar = ({ sound, setSound, isLampOn }: NavbarProps) => {
         <div className="flex gap-4 z-30">
           <button
             onClick={toggleVolume}
-            className={`w-11 h-11 ${
-              isVolume ? "bg-sky-400" : "bg-gray-400"
-            } flex items-center justify-center rounded-xl transition-all duration-500 relative overflow-hidden`}
+            className={`w-11 h-11 ${isVolume ? "bg-sky-400" : "bg-gray-400"
+              } flex items-center justify-center rounded-xl transition-all duration-500 relative overflow-hidden`}
             aria-label="Toggle volume"
           >
             <img
               src={"assets/volume-slash.svg"}
               alt="toggle volume"
-              className={`w-5 h-5 absolute transition-opacity duration-500 ${
-                isVolume ? "opacity-0" : "opacity-100"
-              }`}
+              className={`w-5 h-5 absolute transition-opacity duration-500 ${isVolume ? "opacity-0" : "opacity-100"
+                }`}
             />
             <img
               src={"assets/volume.svg"}
               alt="toggle volume"
-              className={`w-5 h-5 absolute transition-opacity duration-500 ${
-                isVolume ? "opacity-100" : "opacity-0"
-              }`}
+              className={`w-5 h-5 absolute transition-opacity duration-500 ${isVolume ? "opacity-100" : "opacity-0"
+                }`}
             />
           </button>
           <button
@@ -99,16 +92,14 @@ const Navbar = ({ sound, setSound, isLampOn }: NavbarProps) => {
             <img
               src="assets/menu.svg"
               alt="menu"
-              className={`w-5 h-5 absolute transition-opacity duration-500 ${
-                isOpen ? "opacity-0" : "opacity-100"
-              }`}
+              className={`w-5 h-5 absolute transition-opacity duration-500 ${isOpen ? "opacity-0" : "opacity-100"
+                }`}
             />
             <img
               src="assets/close.svg"
               alt="close"
-              className={`w-5 h-5 absolute transition-opacity duration-500 ${
-                isOpen ? "opacity-100" : "opacity-0"
-              }`}
+              className={`w-5 h-5 absolute transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0"
+                }`}
             />
           </button>
         </div>
@@ -129,36 +120,32 @@ const Navbar = ({ sound, setSound, isLampOn }: NavbarProps) => {
                 <FontAwesomeIcon
                   icon={faFacebook}
                   fontSize={30}
-                  className={`mr-4 ${
-                    isLampOn ? "text-gray-400" : "text-gray-500"
-                  } hover-color-change hover:scale-110 transition-all`}
+                  className={`mr-4 ${isLampOn ? "text-gray-400" : "text-gray-500"
+                    } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faInstagram}
                   fontSize={30}
-                  className={`mr-4 ${
-                    isLampOn ? "text-gray-400" : "text-gray-500"
-                  } hover-color-change hover:scale-110 transition-all`}
+                  className={`mr-4 ${isLampOn ? "text-gray-400" : "text-gray-500"
+                    } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faGithub}
                   fontSize={30}
-                  className={`mr-4 ${
-                    isLampOn ? "text-gray-400" : "text-gray-500"
-                  } hover-color-change hover:scale-110 transition-all`}
+                  className={`mr-4 ${isLampOn ? "text-gray-400" : "text-gray-500"
+                    } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
               <a href="" target="_blank" tabIndex={-1}>
                 <FontAwesomeIcon
                   icon={faEnvelope}
                   fontSize={30}
-                  className={`mr-4 ${
-                    isLampOn ? "text-gray-400" : "text-gray-500"
-                  } hover-color-change hover:scale-110 transition-all`}
+                  className={`mr-4 ${isLampOn ? "text-gray-400" : "text-gray-500"
+                    } hover-color-change hover:scale-110 transition-all`}
                 />
               </a>
             </nav>

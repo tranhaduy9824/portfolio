@@ -1,16 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAppStore } from "../store/useAppStore";
 
-interface AirplaneFollowProps {
-  mouseSelected: boolean;
-  setMouseSelected: (value: boolean) => void;
-  isLampOn: boolean;
-}
-
-const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
-  mouseSelected,
-  setMouseSelected,
-  isLampOn,
-}) => {
+const AirplaneFollow = () => {
+  const { mouseSelected, setMouseSelected, isLampOn } = useAppStore();
   const [mousePos, setMousePos] = useState({
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
@@ -91,8 +83,8 @@ const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
           ctx.beginPath();
           ctx.arc(wave.x, wave.y, wave.radius, 0, 2 * Math.PI);
           ctx.strokeStyle = mouseSelected
-          ? `rgba(255, 29, 108, ${wave.opacity}))`
-          : `rgba(36, 236, 255, ${wave.opacity}))`;
+            ? `rgba(255, 29, 108, ${wave.opacity}))`
+            : `rgba(36, 236, 255, ${wave.opacity}))`;
           ctx.lineWidth = 2;
           ctx.stroke();
 
@@ -136,13 +128,11 @@ const AirplaneFollow: React.FC<AirplaneFollowProps> = ({
         className="absolute top-0 left-0 pointer-events-none"
       />
       <div
-        className={`airplane pointer-events-none ${
-          mouseSelected ? "selected" : ""
-        }`}
+        className={`airplane pointer-events-none ${mouseSelected ? "selected" : ""
+          }`}
         style={{
-          transform: `translate(${airplanePos.x - 25}px, ${
-            airplanePos.y - 25
-          }px) rotate(${mouseSelected ? angle + 90 : angle + 45}deg)`,
+          transform: `translate(${airplanePos.x - 25}px, ${airplanePos.y - 25
+            }px) rotate(${mouseSelected ? angle + 90 : angle + 45}deg)`,
         }}
       />
       {!isSoundEnabled && (

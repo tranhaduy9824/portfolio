@@ -1,4 +1,7 @@
-const SuggestScroll = ({isLampOn} : {isLampOn: boolean}) => {
+import { useAppStore } from "../store/useAppStore";
+
+const SuggestScroll = () => {
+  const { isLampOn } = useAppStore();
   return (
     <div className="suggest-scroll">
       <div className={`scroll-border ${isLampOn ? "isLampOn" : ""}`}>

@@ -132,3 +132,38 @@ export const listProject = [
     tags: ["Node.js", "Express"],
   },
 ];
+
+export const projects = [
+  {
+    id: 1,
+    name: "E-Commerce Platform",
+    description: "Full-stack web application",
+    techStack: [0, 1, 2, 4],
+    color: "#ff6b6b",
+    image: "/project1.jpg"
+  },
+  {
+    id: 2,
+    name: "Real-time Chat App",
+    description: "WebSocket-based messaging",
+    techStack: [0, 1, 3, 5],
+    color: "#4ecdc4",
+    image: "/project2.jpg"
+  },
+  {
+    id: 3,
+    name: "Data Visualization Dashboard",
+    description: "Interactive charts and analytics",
+    techStack: [0, 1, 6, 7],
+    color: "#45b7d1",
+    image: "/project3.jpg"
+  },
+  {
+    id: 4,
+    name: "Mobile App (React Native)",
+    description: "Cross-platform mobile solution",
+    techStack: [0, 1, 8, 9],
+    color: "#96ceb4",
+    image: "/project4.jpg"
+  }
+];

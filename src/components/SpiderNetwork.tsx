@@ -8,8 +8,12 @@ import { useSpring, animated } from "@react-spring/three";
 import { createSpiderNetwork, glowMaterial, normalMaterial } from "../utils";
 import { logoModels } from "../constants";
 
-const SpiderNetwork = () => {
-  const [selectedLogos, setSelectedLogos] = useState<number[]>([]);
+interface SpiderNetworkProps {
+  selectedLogos?: number[];
+  onLogoSelect?: (index: number) => void;
+}
+
+const SpiderNetwork = ({ selectedLogos: externalSelected, onLogoSelect }: SpiderNetworkProps = {}) => {
   const networkRef = useRef<THREE.Group>(null);
   const isDragging = useRef(false);
   const { camera } = useThree();
@@ -19,6 +23,7 @@ const SpiderNetwork = () => {
     setIsAnimationComplete,
     positionCamera,
   } = useAppStore();
+  const [internalSelected, setInternalSelected] = useState<number[]>([]);
 
   const models = useLoader(
     GLTFLoader,
@@ -133,7 +138,7 @@ const SpiderNetwork = () => {
   });
 
   const { position, scale } = useSpring({
-    position: showNetwork ? [1.3, -0.4, 5] : [2.37, 0, 0.1],
+    position: showNetwork ? [2, -0.4, 5] : [2.37, 0, 0.1],
     scale: showNetwork ? [1, 1, 1] : [0.38, 0.38, 0.38],
     config: { tension: 100, friction: 20 },
     onStart: () => {
@@ -146,16 +151,22 @@ const SpiderNetwork = () => {
     },
   });
 
+  const selectedLogos = externalSelected || internalSelected;
+
   const handleLogoClick = (index: number) => {
-    setSelectedLogos((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
+    if (onLogoSelect) {
+      onLogoSelect(index);
+    } else {
+      setInternalSelected((prev) =>
+        prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+      );
+    }
   };
 
   useFrame(({ camera }) => {
     glowMaterial.uniforms.viewVector.value = camera.position;
   });
-
+  
   return (
     <>
       <ambientLight intensity={0.3} />
@@ -167,22 +178,6 @@ const SpiderNetwork = () => {
           color="#00aaff"
         />
       )}
-
-      {/* {!showNetwork && isAnimationComplete && (
-        <mesh position={[2.39, 0, 0.0]} renderOrder={0}>
-          <circleGeometry args={[0.5, 64]} />
-          <meshBasicMaterial
-            color="black"
-            transparent
-            opacity={0}
-            stencilWrite={true}
-            stencilRef={1}
-            stencilFunc={THREE.AlwaysStencilFunc}
-            stencilZPass={THREE.ReplaceStencilOp}
-            depthWrite={false}
-          />
-        </mesh>
-      )} */}
 
       <animated.group
         ref={networkRef}
