@@ -190,7 +190,7 @@ const SpiderNetwork = () => {
           const offsetPoint = point.clone().multiplyScalar(1.1);
           const isSelected =
             selectedProject !== null &&
-            projects[selectedProject]?.techStack.includes(index);
+            projects[selectedProject - 1]?.techStack.includes(index);
 
           return (
             <group
@@ -221,7 +221,7 @@ const SpiderNetwork = () => {
         {createSpiderNetwork().map((point, index) => {
           const isSelected =
             selectedProject !== null &&
-            projects[selectedProject]?.techStack.includes(index);
+            projects[selectedProject - 1]?.techStack.includes(index);
           const centerSphereRadius = 1.3 * 0.12; // Bán kính sphere trung tâm
           const iconSphereRadius = 0.3 * 0.4; // Bán kính sphere icon
           const start = new THREE.Vector3(0, 0, 0);

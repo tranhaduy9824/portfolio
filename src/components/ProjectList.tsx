@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { projects, techIcons } from "../constants";
 import { useAppStore } from "../store/useAppStore";
 
@@ -70,7 +70,10 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
   const [hovered, setHovered] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [avatarHovered, setAvatarHovered] = useState(false);
+  const [isHoveringModal, setIsHoveringModal] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const frameId = useRef<number>();
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   const baseClasses = !isLampOn
     ? "bg-gray-50/80 hover:bg-white/90 border-gray-200/50 hover:border-gray-300/70"
@@ -81,12 +84,32 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     : "bg-gray-700/80 shadow-lg hover:shadow-xl";
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({ 
-      x: rect.right + 20,
-      y: rect.top 
-    });
+    const modalWidth = 280;
+    const modalHeight = 200;
+    const offsetX = -100;
+    const offsetY = -40;
+
+    mouseRef.current = {
+      x: Math.min(e.clientX, window.innerWidth - modalWidth - offsetX),
+      y: Math.min(e.clientY, window.innerHeight - modalHeight - offsetY),
+    };
+
+    if (!frameId.current) {
+      frameId.current = requestAnimationFrame(() => {
+        setMousePosition({
+          x: mouseRef.current.x + offsetX,
+          y: mouseRef.current.y + offsetY,
+        });
+        frameId.current = undefined;
+      });
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (frameId.current) cancelAnimationFrame(frameId.current);
+    };
+  }, []);
 
   return (
     <div className="relative group" onMouseMove={handleMouseMove}>
@@ -235,11 +258,11 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
               hovered ? "animate-pulse scale-125" : ""
             }`}
             style={{
-              backgroundColor: isSelected 
-                ? project.color 
-                : !isLampOn 
-                  ? "#9ca3af" 
-                  : "#6b7280",
+              backgroundColor: isSelected
+                ? project.color
+                : !isLampOn
+                ? "#9ca3af"
+                : "#6b7280",
             }}
           />
         </div>
@@ -269,9 +292,9 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
                         : "bg-gray-700/80 text-gray-200 border border-gray-600 hover:bg-gray-600/80"
                     }`}
                     title={tech?.name || "Unknown"}
-                    style={{ 
+                    style={{
                       animationDelay: `${i * 0.1}s`,
-                      transitionDelay: `${i * 50}ms`
+                      transitionDelay: `${i * 50}ms`,
                     }}
                   >
                     <span className="text-xs">{tech?.icon || "🔧"}</span>
@@ -305,39 +328,42 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
       </div>
 
       {/* Modal */}
-      {showDemo && hovered && project.demoImages && (
+      {showDemo && (hovered || isHoveringModal) && project.demoImages && (
         <div
-          className={`fixed rounded-xl p-4 border z-[60] transition-all duration-300 overflow-hidden transform-gpu ${
+          className={`fixed rounded-xl p-4 border z-[9999] ${
+            isHoveringModal ? "pointer-events-auto" : "pointer-events-none"
+          } ${
             !isLampOn
-              ? "bg-white/95 backdrop-blur-lg border-gray-200/50 shadow-2xl"
-              : "bg-gray-900/95 backdrop-blur-lg border-white/20 shadow-2xl"
-          } ${hovered ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+              ? "bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-xl"
+              : "bg-gray-900/95 backdrop-blur-sm border-white/20 shadow-xl"
+          }`}
           style={{
-            top: `${mousePosition.y}px`,
-            left: `${mousePosition.x}px`,
+            top: "0",
+            left: "0",
+            transform: `translate3d(${mousePosition.x}px, ${mousePosition.y}px, 0)`,
             width: "280px",
             maxWidth: "calc(100vw - 40px)",
+            willChange: "transform",
+            transition: isHoveringModal ? "none" : "transform 0.05s linear",
+            backfaceVisibility: "hidden",
           }}
+          onMouseEnter={() => setIsHoveringModal(true)}
+          onMouseLeave={() => setIsHoveringModal(false)}
         >
-          <h5
-            className={`font-semibold text-sm mb-3 ${
-              !isLampOn ? "text-gray-800" : "text-white"
-            }`}
+          <div
+            className={`grid ${
+              project.demoImages.length > 2 ? "grid-cols-2" : "grid-cols-1"
+            } gap-2 mb-3`}
           >
-            Project Preview
-          </h5>
-
-          <div className="grid grid-cols-1 gap-2">
-            {project.demoImages
-              .slice(0, 2)
-              .map((image: string, index: number) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`${project.name} demo ${index + 1}`}
-                  className="w-full h-24 object-cover rounded-lg transition-transform duration-300 hover:scale-105"
-                />
-              ))}
+            {project.demoImages.slice(0, 4).map((image, index) => (
+              <img
+                key={index}
+                src={`/images/${image}`}
+                alt={`Preview ${index + 1}`}
+                className="w-full h-24 object-cover rounded-lg"
+                loading="lazy"
+              />
+            ))}
           </div>
 
           {project.liveUrl && (
@@ -345,13 +371,13 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block mt-3 py-2 px-3 rounded-lg font-medium text-sm text-center text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              style={{ 
+              className="block py-2 px-3 rounded-lg font-medium text-sm text-center text-white hover:scale-105 transition-transform"
+              style={{
                 backgroundColor: project.color,
-                boxShadow: `0 4px 12px ${project.color}30`
+                pointerEvents: "auto",
               }}
             >
-              Live Website →
+              Live Demo →
             </a>
           )}
         </div>

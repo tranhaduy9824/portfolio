@@ -100,36 +100,10 @@ export const logoModels = [
   { model: "/models/logos/nodejs.glb", scale: 1 },
   { model: "/models/logos/php.glb", scale: 1 },
   { model: "/models/logos/python.glb", scale: 0.08 },
-  { model: "/models/logos/css.glb", scale: 0.00095, position: [0.065, -0.19, 0] },
-];
-
-export const listProject = [
   {
-    name: "Project 1",
-    description: "Description of project 1",
-    image: "/images/project1.jpg",
-    link: "https://example.com/project1",
-    github: "https://github.com/user/project1",
-    video: "https://www.youtube.com/watch?v=example1",
-    tags: ["React", "JavaScript"],
-  },
-  {
-    name: "Project 2",
-    description: "Description of project 2",
-    image: "/images/project2.jpg",
-    link: "https://example.com/project2",
-    github: "https://github.com/user/project2",
-    video: "https://www.youtube.com/watch?v=example2",
-    tags: ["HTML", "CSS"],
-  },
-  {
-    name: "Project 3",
-    description: "Description of project 3",
-    image: "/images/project3.jpg",
-    link: "https://example.com/project3",
-    github: "https://github.com/user/project3",
-    video: "https://www.youtube.com/watch?v=example3",
-    tags: ["Node.js", "Express"],
+    model: "/models/logos/css.glb",
+    scale: 0.00095,
+    position: [0.065, -0.19, 0],
   },
 ];
 
@@ -140,7 +114,8 @@ export const projects = [
     description: "Full-stack web application",
     techStack: [0, 1, 2, 4],
     color: "#ff6b6b",
-    image: "/project1.jpg"
+    demoImages: ["bg1.gif", "bg2.gif", "bg3.jpg"],
+    liveUrl: "#",
   },
   {
     id: 2,
@@ -148,7 +123,8 @@ export const projects = [
     description: "WebSocket-based messaging",
     techStack: [0, 1, 3, 5],
     color: "#4ecdc4",
-    image: "/project2.jpg"
+    demoImages: ["bg1.gif", "bg3.jpg"],
+    liveUrl: "#",
   },
   {
     id: 3,
@@ -156,7 +132,8 @@ export const projects = [
     description: "Interactive charts and analytics",
     techStack: [0, 1, 6, 7],
     color: "#45b7d1",
-    image: "/project3.jpg"
+    demoImages: ["bg1.gif", "bg2.gif"],
+    liveUrl: "#",
   },
   {
     id: 4,
@@ -164,8 +141,9 @@ export const projects = [
     description: "Cross-platform mobile solution",
     techStack: [0, 1, 8, 9],
     color: "#96ceb4",
-    image: "/project4.jpg"
-  }
+    demoImages: ["bg2.gif", "bg3.jpg"],
+    liveUrl: "#",
+  },
 ];
 
 interface TechIcon {
