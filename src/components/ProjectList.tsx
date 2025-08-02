@@ -70,10 +70,12 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
   const [hovered, setHovered] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   const [avatarHovered, setAvatarHovered] = useState(false);
-  const [isHoveringModal, setIsHoveringModal] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const frameId = useRef<number>();
   const mouseRef = useRef({ x: 0, y: 0 });
+  const modalRef = useRef<HTMLDivElement>(null);
+  const itemRef = useRef<HTMLDivElement>(null);
+  const isHoveringRef = useRef(false);
 
   const baseClasses = !isLampOn
     ? "bg-gray-50/80 hover:bg-white/90 border-gray-200/50 hover:border-gray-300/70"
@@ -111,24 +113,69 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     };
   }, []);
 
+  const handleMouseEnterItem = () => {
+    isHoveringRef.current = true;
+    setHovered(true);
+    setShowDemo(true);
+  };
+
+  const handleMouseLeaveItem = () => {
+    isHoveringRef.current = false;
+    
+    // Kiểm tra sau một khoảng thời gian ngắn để đảm bảo chuột không di chuyển sang modal
+    setTimeout(() => {
+      if (!isHoveringRef.current) {
+        setHovered(false);
+        setShowDemo(false);
+      }
+    }, 100);
+  };
+
+  const handleModalMouseEnter = () => {
+    isHoveringRef.current = true;
+    setShowDemo(true);
+  };
+
+  const handleModalMouseLeave = () => {
+    isHoveringRef.current = false;
+    setShowDemo(false);
+    setHovered(false);
+  };
+
+  // Theo dõi sự kiện di chuột toàn cục để xác định khi nào ẩn modal
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!showDemo) return;
+      
+      // Kiểm tra xem chuột có nằm trong modal hoặc item không
+      const inModal = modalRef.current?.contains(e.target as Node);
+      const inItem = itemRef.current?.contains(e.target as Node);
+      
+      if (!inModal && !inItem) {
+        setShowDemo(false);
+        setHovered(false);
+        isHoveringRef.current = false;
+      }
+    };
+
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
+  }, [showDemo]);
+
   return (
     <div className="relative group" onMouseMove={handleMouseMove}>
       <div
+        ref={itemRef}
         className={`
           relative p-5 rounded-xl cursor-pointer transition-all duration-500 transform border overflow-hidden
           ${isSelected ? selectedClasses : baseClasses}
           ${hovered ? "shadow-2xl -translate-y-1" : ""}
         `}
         onClick={onSelect}
-        onMouseEnter={() => {
-          setHovered(true);
-          setShowDemo(true);
-        }}
-        onMouseLeave={() => {
-          setHovered(false);
-          setShowDemo(false);
-          setAvatarHovered(false);
-        }}
+        onMouseEnter={handleMouseEnterItem}
+        onMouseLeave={handleMouseLeaveItem}
         style={{
           borderColor: isSelected
             ? project.color
@@ -328,11 +375,10 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
       </div>
 
       {/* Modal */}
-      {showDemo && (hovered || isHoveringModal) && project.demoImages && (
+      {showDemo && project.demoImages && (
         <div
-          className={`fixed rounded-xl p-4 border z-[9999] ${
-            isHoveringModal ? "pointer-events-auto" : "pointer-events-none"
-          } ${
+          ref={modalRef}
+          className={`fixed rounded-xl p-4 border z-[9999] pointer-events-auto ${
             !isLampOn
               ? "bg-white/95 backdrop-blur-sm border-gray-200/50 shadow-xl"
               : "bg-gray-900/95 backdrop-blur-sm border-white/20 shadow-xl"
@@ -344,11 +390,11 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             width: "280px",
             maxWidth: "calc(100vw - 40px)",
             willChange: "transform",
-            transition: isHoveringModal ? "none" : "transform 0.05s linear",
+            transition: "transform 0.1s ease-out",
             backfaceVisibility: "hidden",
           }}
-          onMouseEnter={() => setIsHoveringModal(true)}
-          onMouseLeave={() => setIsHoveringModal(false)}
+          onMouseEnter={handleModalMouseEnter}
+          onMouseLeave={handleModalMouseLeave}
         >
           <div
             className={`grid ${
@@ -374,7 +420,6 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
               className="block py-2 px-3 rounded-lg font-medium text-sm text-center text-white hover:scale-105 transition-transform"
               style={{
                 backgroundColor: project.color,
-                pointerEvents: "auto",
               }}
             >
               Live Demo →

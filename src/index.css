@@ -169,11 +169,11 @@ main {
 /* Project */
 @keyframes slideInLeft {
   from {
-    transform: translateX(-100%) scale(0.95);
+    transform: translate(-100%, -50%) scale(0.95);
     opacity: 0;
   }
   to {
-    transform: translateX(0) scale(1);
+    transform: translate(-100%, -50%) scale(1);
     opacity: 1;
   }
 }
