@@ -15,21 +15,38 @@ interface Project {
 const ProjectList = () => {
   const { isLampOn, showNetwork, selectedProject, setSelectedProject } =
     useAppStore();
+  const listRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-  if (!showNetwork) return null;
+  useEffect(() => {
+    if (showNetwork) {
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+      });
+    } else {
+      setIsVisible(false);
+    }
+  }, [showNetwork]);
+
+  if (!showNetwork && !isVisible) return null;
 
   return (
     <div
-      className={`fixed top-1/2 left-24 -translate-y-1/2 z-50 w-96 rounded-xl p-6 border transition-all duration-500 transform project-list-enter ${
+      ref={listRef}
+      className={`fixed top-1/2 left-24 -translate-y-1/2 z-50 w-96 rounded-xl p-6 border ${
         !isLampOn
           ? "backdrop-blur-lg border-gray-200/30 shadow-2xl shadow-black/10"
           : "backdrop-blur-lg border-white/10 shadow-2xl shadow-black/50"
-      } ${
-        showNetwork
-          ? "translate-x-0 opacity-100 scale-100"
-          : "-translate-x-full opacity-0 scale-95"
       }`}
-      style={{ backgroundColor: "#ffffff1a" }}
+      style={{
+        backgroundColor: "#ffffff1a",
+        transition: "transform 500ms cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 500ms ease, scale 500ms ease",
+        transform: isVisible 
+          ? "translateX(0) translateY(-50%)" 
+          : "translateX(-100%) translateY(-50%)",
+        opacity: isVisible ? 1 : 0,
+        scale: isVisible ? 1 : 0.95
+      }}
     >
       {/* Project List */}
       <div
@@ -76,6 +93,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
   const isHoveringRef = useRef(false);
+  const isMouseOverModalRef = useRef(false); // Thêm ref để theo dõi khi chuột ở trên modal
 
   const baseClasses = !isLampOn
     ? "bg-gray-50/80 hover:bg-white/90 border-gray-200/50 hover:border-gray-300/70"
@@ -86,6 +104,8 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
     : "bg-gray-700/80 shadow-lg hover:shadow-xl";
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMouseOverModalRef.current) return;
+
     const modalWidth = 280;
     const modalHeight = 200;
     const offsetX = -100;
@@ -121,8 +141,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
 
   const handleMouseLeaveItem = () => {
     isHoveringRef.current = false;
-    
-    // Kiểm tra sau một khoảng thời gian ngắn để đảm bảo chuột không di chuyển sang modal
+
     setTimeout(() => {
       if (!isHoveringRef.current) {
         setHovered(false);
@@ -133,34 +152,35 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
 
   const handleModalMouseEnter = () => {
     isHoveringRef.current = true;
+    isMouseOverModalRef.current = true;
     setShowDemo(true);
   };
 
   const handleModalMouseLeave = () => {
     isHoveringRef.current = false;
+    isMouseOverModalRef.current = false;
     setShowDemo(false);
     setHovered(false);
   };
 
-  // Theo dõi sự kiện di chuột toàn cục để xác định khi nào ẩn modal
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (!showDemo) return;
-      
-      // Kiểm tra xem chuột có nằm trong modal hoặc item không
+
       const inModal = modalRef.current?.contains(e.target as Node);
       const inItem = itemRef.current?.contains(e.target as Node);
-      
+
       if (!inModal && !inItem) {
         setShowDemo(false);
         setHovered(false);
         isHoveringRef.current = false;
+        isMouseOverModalRef.current = false;
       }
     };
 
-    document.addEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener("mousemove", handleGlobalMouseMove);
     return () => {
-      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
     };
   }, [showDemo]);
 
@@ -282,19 +302,22 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
 
             {/* Live Website Badge */}
             {project.liveUrl && (
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2">
                 <div
                   className={`w-2 h-2 rounded-full animate-pulse ${
                     !isLampOn ? "bg-green-500" : "bg-green-400"
                   }`}
                 />
-                <span
-                  className={`text-xs font-medium ${
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-xs font-medium transition-all duration-300 pb-0.5 border-b border-transparent hover:border-current ${
                     !isLampOn ? "text-green-600" : "text-green-400"
                   }`}
                 >
                   Live Website
-                </span>
+                </a>
               </div>
             )}
           </div>
@@ -402,29 +425,58 @@ const ProjectItem: React.FC<ProjectItemProps> = ({
             } gap-2 mb-3`}
           >
             {project.demoImages.slice(0, 4).map((image, index) => (
-              <img
+              <div
                 key={index}
-                src={`/images/${image}`}
-                alt={`Preview ${index + 1}`}
-                className="w-full h-24 object-cover rounded-lg"
-                loading="lazy"
-              />
+                className="overflow-hidden rounded-lg transition-transform duration-500 hover:scale-105"
+              >
+                <img
+                  src={`/images/${image}`}
+                  alt={`Preview ${index + 1}`}
+                  className="w-full h-24 object-cover transform transition-transform duration-500 hover:scale-110"
+                  loading="lazy"
+                />
+              </div>
             ))}
           </div>
 
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block py-2 px-3 rounded-lg font-medium text-sm text-center text-white hover:scale-105 transition-transform"
-              style={{
-                backgroundColor: project.color,
-              }}
-            >
-              Live Demo →
-            </a>
-          )}
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-2">
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  !isLampOn ? "bg-red-500" : "bg-red-400"
+                }`}
+              />
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-xs font-medium transition-all duration-300 pb-0.5 border-b border-transparent hover:border-current ${
+                  !isLampOn ? "text-red-600" : "text-red-400"
+                }`}
+              >
+                Explore More
+              </a>
+            </div>
+            {project.liveUrl && (
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-2 h-2 rounded-full animate-pulse ${
+                    !isLampOn ? "bg-green-500" : "bg-green-400"
+                  }`}
+                />
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-xs font-medium transition-all duration-300 pb-0.5 border-b border-transparent hover:border-current ${
+                    !isLampOn ? "text-green-600" : "text-green-400"
+                  }`}
+                >
+                  Live Website
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
